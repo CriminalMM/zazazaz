@@ -1,9 +1,5 @@
 local USE_GOOD_SIGNAL_ONLY = true
 
-if USE_GOOD_SIGNAL_ONLY then
-	return require("GoodSignal")
-end
-
 local HttpService = game:GetService("HttpService")
 
 local ENABLE_TRACEBACK = false
