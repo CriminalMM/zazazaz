@@ -1,0 +1,3853 @@
+    -- New example script written by wally
+-- You can suggest changes with a pull request or something
+
+local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/'
+
+local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
+local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
+local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
+
+local Window = Library:CreateWindow({
+    -- Set Center to true if you want the menu to appear in the center
+    -- Set AutoShow to true if you want the menu to appear when it is created
+    -- Position and Size are also valid options here
+    -- but you do not need to define them unless you are changing them :)
+
+    Title = 'ReaperCheats.cc REBORNED | reapersrevenge | WE <3 GRIMREAPER',
+    Center = true,
+    AutoShow = true,
+    TabPadding = 8,
+    MenuFadeTime = 0.2
+})
+
+-- CALLBACK NOTE:
+-- Passing in callback functions via the initial element parameters (i.e. Callback = function(Value)...) works
+-- HOWEVER, using Toggles/Options.INDEX:OnChanged(function(Value) ... ) is the RECOMMENDED way to do this.
+-- I strongly recommend decoupling UI code from logic code. i.e. Create your UI elements FIRST, and THEN setup :OnChanged functions later.
+
+-- You do not have to set your tabs & groups up this way, just a prefrence.
+local Tabs = {
+    -- Creates a new tab titled Main
+    Main = Window:AddTab('Main'),
+    Online = Window:AddTab('Online'),
+    Weapons = Window:AddTab('Weapons'),
+    AimAndVis = Window:AddTab('Aim/Vis'),
+    Teleports = Window:AddTab('Teleports'),
+    ['UI Settings'] = Window:AddTab('UI Settings'),
+}
+
+-- Groupbox and Tabbox inherit the same functions
+-- except Tabboxes you have to call the functions on a tab (Tabbox:AddTab(name))
+local LeftGroupBox = Tabs.Main:AddLeftGroupbox('Local')
+
+-- We can also get our Main tab via the following code:
+-- local LeftGroupBox = Window.Tabs.Main:AddLeftGroupbox('Groupbox')
+
+-- Tabboxes are a tiny bit different, but here's a basic example:
+--[[
+
+local TabBox = Tabs.Main:AddLeftTabbox() -- Add Tabbox on left side
+
+local Tab1 = TabBox:AddTab('Tab 1')
+local Tab2 = TabBox:AddTab('Tab 2')
+
+-- You can now call AddToggle, etc on the tabs you added to the Tabbox
+]]
+
+
+
+-- 1/15/23
+-- Deprecated old way of creating buttons in favor of using a table
+-- Added DoubleClick button functionality
+
+--[[
+    Groupbox:AddButton
+    Arguments: {
+        Text = string,
+        Func = function,
+        DoubleClick = boolean
+        Tooltip = string,
+    }
+
+    You can call :AddButton on a button to add a SubButton!
+]]
+
+local MyButton = LeftGroupBox:AddButton({
+    Text = 'God Mode',
+    Func = function()
+        local Players = game:GetService("Players")
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        
+        local client = Players.LocalPlayer
+        local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+        
+        local function killPlayer(player)
+            if player == client then
+                local character = player.Character
+                if character then
+                    local instance = character:GetChildren()[1]
+                    local args = {
+                        19742,
+                        {instance},
+                        {
+                            ["DamageHumanoid"] = {
+                                ["Value"] = -math.huge, -- change to negative infinity for infinite health
+                            },
+                            ["DamageVehicle"] = {
+                                ["Value"] = -math.huge,
+                            },
+                            ["Explosive"] = {
+                                ["ExplosiveDamageHumanoid"] = {
+                                    ["Value"] = -math.huge,
+                                },
+                                ["ExplosiveDamageVehicle"] = {
+                                    ["Value"] = -math.huge,
+                                },
+                            },
+                        },
+                        Vector3.new(0,0,0)
+                    }
+                    remote:FireServer(unpack(args))
+                end
+            end
+        end
+        
+        killPlayer(client) -- call the function with the local player as the argument
+    end,
+    DoubleClick = true,
+    Tooltip = 'Puts you in god mode lol'
+})
+
+local MyButton = LeftGroupBox:AddButton({
+    Text = 'Fully Heal',
+    Func = function()
+        local Players = game:GetService("Players")
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        
+        local client = Players.LocalPlayer
+        local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+        
+        local function killPlayer(player)
+            if player == client then
+                local character = player.Character
+                if character then
+                    local instance = character:GetChildren()[1]
+                    local args = {
+                        19742,
+                        {instance},
+                        {
+                            ["DamageHumanoid"] = {
+                                ["Value"] = -100, -- change to negative infinity for infinite health
+                            },
+                            ["DamageVehicle"] = {
+                                ["Value"] = -100,
+                            },
+                            ["Explosive"] = {
+                                ["ExplosiveDamageHumanoid"] = {
+                                    ["Value"] = -100,
+                                },
+                                ["ExplosiveDamageVehicle"] = {
+                                    ["Value"] = -100,
+                                },
+                            },
+                        },
+                        Vector3.new(0,0,0)
+                    }
+                    remote:FireServer(unpack(args))
+                end
+            end
+        end
+        
+        killPlayer(client) -- call the function with the local player as the argument
+    end,
+    DoubleClick = false,
+    Tooltip = 'Healing Function [100HP]'
+})
+
+local MyButton2 = MyButton:AddButton({
+    Text = 'Half Heal',
+    Func = function()
+        local Players = game:GetService("Players")
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        
+        local client = Players.LocalPlayer
+        local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+        
+        local function killPlayer(player)
+            if player == client then
+                local character = player.Character
+                if character then
+                    local instance = character:GetChildren()[1]
+                    local args = {
+                        19742,
+                        {instance},
+                        {
+                            ["DamageHumanoid"] = {
+                                ["Value"] = -50, -- change to negative infinity for infinite health
+                            },
+                            ["DamageVehicle"] = {
+                                ["Value"] = -50,
+                            },
+                            ["Explosive"] = {
+                                ["ExplosiveDamageHumanoid"] = {
+                                    ["Value"] = -50,
+                                },
+                                ["ExplosiveDamageVehicle"] = {
+                                    ["Value"] = -50,
+                                },
+                            },
+                        },
+                        Vector3.new(0,0,0)
+                    }
+                    remote:FireServer(unpack(args))
+                end
+            end
+        end
+        
+        killPlayer(client) -- call the function with the local player as the argument
+    end,
+    DoubleClick = true, -- You will have to click this button twice to trigger the callback
+    Tooltip = 'Healing Function [50HP]'
+})
+
+local MyButton = LeftGroupBox:AddButton({
+    Text = 'Suicide',
+    Func = function()
+        game.Players.LocalPlayer.Character.Humanoid.Health = 0
+    end,
+    DoubleClick = false,
+    Tooltip = 'Are you tired of your life? Press this.'
+})
+
+
+local MyButton = LeftGroupBox:AddButton({
+    Text = 'Rejoin',
+    Func = function()
+        game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
+    end,
+    DoubleClick = false,
+    Tooltip = 'This is the main button'
+})
+
+LeftGroupBox:AddSlider('MySlider', {
+    Text = 'Field of View Slider',
+    Default = 70,
+    Min = 70,
+    Max = 120,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        game:GetService("Workspace").Camera.FieldOfView = Value
+    end
+})
+
+LeftGroupBox:AddLabel('Anti Things Might Be Detected', true)
+
+local MyButton = LeftGroupBox:AddButton({
+    Text = 'Anti Seat',
+    Func = function()
+        for i,v in next, workspace:GetDescendants() do
+            if v:IsA'Seat' then
+                v:Destroy()
+            end
+        end
+    end,
+    DoubleClick = false,
+    Tooltip = 'This Will Make It So You Cant Sit.'
+})
+
+local MyButton = LeftGroupBox:AddButton({
+    Text = 'Anti Logs',
+    Func = function()
+        while not game:IsLoaded() do wait() end
+
+repeat wait() until game.Players.LocalPlayer.Character
+
+local LP = game:GetService('Players').LocalPlayer
+local PlayerScripts = LP ~= nil and LP:FindFirstChild('PlayerScripts') or nil
+local ChatScript = PlayerScripts ~= nil and PlayerScripts:FindFirstChild('ChatScript') or nil
+local ChatMain = ChatScript ~= nil and ChatScript:FindFirstChild('ChatMain') or nil
+
+if LP and ChatMain ~= nil then
+ local Old, Chatted, OldChatted = nil, Instance.new('BindableEvent'), LP.Chatted; Chatted.Name = LP.Name..'_Chatted_Event'
+ Old = hookmetamethod(game, '__index', newcclosure(function(self, Index)
+       if checkcaller() and self == LP and Index == 'Chatted' then
+         return Chatted.Event
+      elseif not checkcaller() and self == LP and Index == 'Chatted' then
+        return OldChatted
+       end
+
+       return Old(self, Index)
+ end))
+
+local Old2, MessagePosted = nil, require(ChatMain).MessagePosted
+if MessagePosted then
+    Old2 = hookfunction(MessagePosted.fire, function(self, ...)
+        if not checkcaller() then
+            return Chatted:Fire(...)
+        end
+    end)
+end
+end
+game.StarterGui:SetCore('SendNotification', { Title = 'Anti Log - Reaper'; Text = 'Anti Log Enabled'; })
+    end,
+    DoubleClick = false,
+    Tooltip = 'Removes, Name, Chats From The Logs! With This Staff Cant See You In Their ChatLogs'
+})
+--[[
+    NOTE: You can chain the button methods!
+    EXAMPLE:
+
+    LeftGroupBox:AddButton({ Text = 'Kill all', Func = Functions.KillAll, Tooltip = 'This will kill everyone in the game!' })
+        :AddButton({ Text = 'Kick all', Func = Functions.KickAll, Tooltip = 'This will kick everyone in the game!' })
+]]
+
+-- Groupbox:AddLabel
+
+
+-- Groupbox:AddDivider
+-- Arguments: None
+LeftGroupBox:AddDivider()
+
+--[[
+    Groupbox:AddSlider
+    Arguments: Idx, SliderOptions
+
+    SliderOptions: {
+        Text = string,
+        Default = number,
+        Min = number,
+        Max = number,
+        Suffix = string,
+        Rounding = number,
+        Compact = boolean,
+        HideMax = boolean,
+    }
+
+    Text, Default, Min, Max, Rounding must be specified.
+    Suffix is optional.
+    Rounding is the number of decimal places for precision.
+
+    Compact will hide the title label of the Slider
+
+    HideMax will only display the value instead of the value & max value of the slider
+    Compact will do the same thing
+]]
+
+
+-- Long text label to demonstrate UI scrolling behaviour.
+local LeftGroupBox2 = Tabs.Main:AddLeftGroupbox('Wardrobe');
+
+-- Define a variable to store the selected bodypart
+local selectedBodypart = "Torso"
+
+-- Add a dropdown to select the bodypart
+LeftGroupBox2:AddDropdown('brodang', {
+    Text = 'Select Bodypart [Dufflebag]',
+    Default = 1,
+    Values = {'Torso', 'Head', 'LeftLeg', 'RightLeg'},
+    Callback = function(value)
+        -- Update the selected bodypart when the dropdown changes
+        selectedBodypart = value
+    end
+})
+
+-- Add a button to equip the dufflebag on the selected bodypart
+LeftGroupBox2:AddButton('Doe Dufflebag Aan', function()
+    game:GetService("ReplicatedStorage").Tas.Tas:FireServer(table.unpack({
+        [1] = "Equip",
+        [2] = "Tas",
+        [3] = selectedBodypart, -- Use the selected bodypart
+    }))
+end)
+
+
+LeftGroupBox2:AddButton('Doe Dufflebag Af', function()
+    game:GetService("ReplicatedStorage").Tas.Tas:FireServer(table.unpack({
+        [1] = "Unequip",
+        [2] = "Tas",
+        [3] = "Torso",
+    }))
+end)
+
+LeftGroupBox2:AddLabel('Outfitter, Do you have more \n DM: Johnson#0069', true)
+
+LeftGroupBox2:AddButton('Custom Outfit', function()
+   
+end)
+
+LeftGroupBox2:AddButton('White Suit', function()
+    local args = {
+        [1] = "Clothing",
+        [2] = game:GetService("ReplicatedStorage"):WaitForChild("shirtNetwork"):WaitForChild("shirtStorage"):WaitForChild("Clothing"):WaitForChild("White Tuxedo White Suit Spy James Bond 007 Elegant")
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("shirtNetwork"):WaitForChild("AssignEntity"):FireServer(unpack(args))
+wait(0.1)   
+local args = {
+    [1] = "Clothing",
+    [2] = game:GetService("ReplicatedStorage"):WaitForChild("broekNetwork"):WaitForChild("broekStorage"):WaitForChild("Clothing"):WaitForChild("White Tuxedo White Suit Spy James Bond 007 Pants")
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("broekNetwork"):WaitForChild("AssignEntity"):FireServer(unpack(args))
+
+end)
+
+LeftGroupBox2:AddButton('Black Suit', function()
+   local args = {
+    [1] = "Clothing",
+    [2] = game:GetService("ReplicatedStorage"):WaitForChild("shirtNetwork"):WaitForChild("shirtStorage"):WaitForChild("Clothing"):WaitForChild("White Button Up w/ Black Suit [+] -")
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("shirtNetwork"):WaitForChild("AssignEntity"):FireServer(unpack(args))
+wait(0.1)
+local args = {
+    [1] = "Clothing",
+    [2] = game:GetService("ReplicatedStorage"):WaitForChild("broekNetwork"):WaitForChild("broekStorage"):WaitForChild("Clothing"):WaitForChild("Black Coat Pants [-]")
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("broekNetwork"):WaitForChild("AssignEntity"):FireServer(unpack(args))
+
+end)
+
+LeftGroupBox2:AddButton('Reapers Custom Outfit', function()
+    local args = {
+        [1] = "Clothing",
+        [2] = game:GetService("ReplicatedStorage"):WaitForChild("shirtNetwork"):WaitForChild("shirtStorage"):WaitForChild("Clothing"):WaitForChild("Boef White Long Sleeves")
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("shirtNetwork"):WaitForChild("AssignEntity"):FireServer(unpack(args))
+    wait(0.1)
+    local args = {
+        [1] = "Clothing",
+        [2] = game:GetService("ReplicatedStorage"):WaitForChild("broekNetwork"):WaitForChild("broekStorage"):WaitForChild("Clothing"):WaitForChild("Dsquared2 Black Jeans with LV Belt")
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("broekNetwork"):WaitForChild("AssignEntity"):FireServer(unpack(args))
+    wait(0.1)
+    local args = {
+        [1] = "Helmet",
+        [2] = game:GetService("ReplicatedStorage"):WaitForChild("maskerNetwork"):WaitForChild("maskerStorage"):WaitForChild("Helmet"):WaitForChild("Pion")
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("maskerNetwork"):WaitForChild("AssignEntity"):FireServer(unpack(args))
+end)
+
+LeftGroupBox2:AddButton('DSI Black Outfit', function()
+    local args = {
+        [1] = "Clothing",
+        [2] = game:GetService("ReplicatedStorage"):WaitForChild("dsiNetwork"):WaitForChild("DSIStorage"):WaitForChild("Clothing"):WaitForChild("DSI jas")   }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("polNetwork"):WaitForChild("AssignEntity"):FireServer(unpack(args))
+
+        local args = {
+        [1] = "Clothing",
+        [2] = game:GetService("ReplicatedStorage"):WaitForChild("dsiNetwork"):WaitForChild("DSIStorage"):WaitForChild("Clothing"):WaitForChild("Zwarte spijker broek")   }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("polNetwork"):WaitForChild("AssignEntity"):FireServer(unpack(args))
+end)
+
+LeftGroupBox2:AddButton('La Icona', function()
+    local args = {
+        [1] = "Clothing",
+        [2] = game:GetService("ReplicatedStorage"):WaitForChild("peakyNetwork"):WaitForChild("peakyStorage"):WaitForChild("Clothing"):WaitForChild("La Icona")   }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("polNetwork"):WaitForChild("AssignEntity"):FireServer(unpack(args))
+
+end)
+
+LeftGroupBox2:AddButton('La Icona [GOLD]', function()
+    local args = {
+        [1] = "Clothing",
+        [2] = game:GetService("ReplicatedStorage"):WaitForChild("peakyNetwork"):WaitForChild("peakyStorage"):WaitForChild("Clothing"):WaitForChild("La Icona Goud")   }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("polNetwork"):WaitForChild("AssignEntity"):FireServer(unpack(args))
+
+end)
+
+LeftGroupBox2:AddButton('Undercover Agent', function()
+    local args = {
+        [1] = "Clothing",
+        [2] = game:GetService("ReplicatedStorage"):WaitForChild("polNetwork"):WaitForChild("POLStorage"):WaitForChild("Clothing"):WaitForChild("Undercover")    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("polNetwork"):WaitForChild("AssignEntity"):FireServer(unpack(args))
+end)
+
+LeftGroupBox2:AddButton('Noodhulp', function()
+    local args = {
+        [1] = "Clothing",
+        [2] = game:GetService("ReplicatedStorage"):WaitForChild("polNetwork"):WaitForChild("POLStorage"):WaitForChild("Clothing"):WaitForChild("Noodhulp")    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("polNetwork"):WaitForChild("AssignEntity"):FireServer(unpack(args))
+end)
+
+LeftGroupBox2:AddButton('Motoragent', function()
+    local args = {
+        [1] = "Clothing",
+        [2] = game:GetService("ReplicatedStorage"):WaitForChild("polNetwork"):WaitForChild("POLStorage"):WaitForChild("Clothing"):WaitForChild("Motor Kleding")    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("polNetwork"):WaitForChild("AssignEntity"):FireServer(unpack(args))
+end)
+
+
+
+local TabBox = Tabs.Main:AddRightTabbox() -- Add Tabbox on right side
+
+-- Anything we can do in a Groupbox, we can do in a Tabbox tab (AddToggle, AddSlider, AddLabel, etc etc...)
+local Tab1 = TabBox:AddTab('Game Options')
+
+Tab1:AddButton('Remove Safezones', function()
+    local workspace = game:GetService("Workspace")
+
+    local safeZoneObjects = {}
+    
+    -- Find all objects with the name "Safe Zone" and store them in the safeZoneObjects table
+    for _, object in pairs(workspace:GetChildren()) do
+        if object.Name == "Safe Zone" then
+            table.insert(safeZoneObjects, object)
+        end
+    end
+    
+    -- Destroy all objects in the safeZoneObjects table
+    for _, object in pairs(safeZoneObjects) do
+        object:Destroy()
+    end
+    
+end)
+
+local Tab2 = TabBox:AddTab('Game Visuals')
+
+LeftGroupBox2:AddButton('Kassa ESP', function()
+     
+end)
+
+-- Dependency boxes let us control the visibility of UI elements depending on another UI elements state.
+-- e.g. we have a 'Feature Enabled' toggle, and we only want to show that features sliders, dropdowns etc when it's enabled!
+-- Dependency box example:
+local RightGroupbox = Tabs.Main:AddRightGroupbox('Exploits ig');
+
+RightGroupbox:AddButton('Remove AC', function()
+    NotificationLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/lobox920/Notification-Library/Main/Library.lua"))()
+    NotificationLibrary:SendNotification("Info", "Attempting To Bypass AntiCheat, This Could Take A While...", 5)
+    wait(0.1)
+    for k,v in pairs(getgc(true)) do
+        if pcall(function() return rawget(v,"indexInstance") end) and type(rawget(v,"indexInstance")) == "table" and  (rawget(v,"indexInstance"))[1] == "kick" then
+            v.tvk = {"kick",function() return game.Workspace:WaitForChild("") end}
+        end
+     end
+     wait(0.1)
+     --// Cache
+    
+    local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
+    
+    --// Loaded check
+    
+    if getgenv().ED_AntiKick then return end
+    
+    --// Variables
+    
+    local Players, StarterGui, OldNamecall = game:GetService("Players"), game:GetService("StarterGui")
+    
+    --// Global Variables
+    
+    getgenv().ED_AntiKick = {
+        SendNotifications = true, -- Set to true if you want to get notified for every event
+        CheckCaller = false -- Set to true if you want to disable kicking by other executed scripts
+    }
+    
+    --// Main
+    
+    OldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(...)
+        if (getgenv().ED_AntiKick.CheckCaller and not checkcaller() or true) and stringlower(getnamecallmethod()) == "kick" then
+            if getgenv().ED_AntiKick.SendNotifications then
+                StarterGui:SetCore("SendNotification", {
+                    Title = "Reapers AntiCheat Bypasser",
+                    Text = "Whoopsies, AntiCheat Tried To Kick You LOL! (He Failed)",
+                    Icon = "rbxassetid://447444448",
+                    Duration = 3,
+                })
+            end
+    
+            return nil
+        end
+    
+        return OldNamecall(...)
+    end))
+    
+    if getgenv().ED_AntiKick.SendNotifications then
+        StarterGui:SetCore("SendNotification", {
+            Title = "Reapers AntiCheat Bypasser Loaded.",
+            Text = "Anticheat = Bypassed! Have Fun!",
+            Icon = "rbxassetid://447444448",
+            Duration = 5,
+        })
+    end
+end)
+
+RightGroupbox:AddButton('Remove Cooldowns', function()
+    game:GetService("Workspace")["Kassa Overval Systeem"].Kassa.Kassa.Cooldown:Destroy()
+    game:GetService("Workspace")["Kassa Overval Systeem"].Kassa.Kassa.Cooldown:Destroy()
+    game:GetService("Workspace")["Kassa Overval Systeem"].Kassa.Kassa.Cooldown:Destroy()
+    game:GetService("Workspace").Plank11.Trigger.Cooldown:Destroy()
+    game:GetService("Workspace").Plank12.Trigger.Cooldown:Destroy()
+    game:GetService("Workspace").Plank8.Trigger.Cooldown:Destroy()
+    game:GetService("Workspace").Plank9.Trigger.Cooldown:Destroy()
+    game:GetService("Workspace").Plank7.Trigger.Cooldown:Destroy()
+    game:GetService("Workspace").Plank4.Trigger.Cooldown:Destroy()
+    game:GetService("Workspace").Plank5.Trigger.Cooldown:Destroy()
+    game:GetService("Workspace").Plank6.Trigger.Cooldown:Destroy()
+    game:GetService("Workspace").Plank3.Trigger.Cooldown:Destroy()
+    game:GetService("Workspace").Plank2.Trigger.Cooldown:Destroy()
+    game:GetService("Workspace").Plank1.Trigger.Cooldown:Destroy()
+    game:GetService("Workspace").Plank10.Trigger.Cooldown:Destroy()
+end)
+
+RightGroupbox:AddToggle('Fly', {
+    Text = 'Fly [Not Working]',
+    Default = false,
+    Tooltip = 'Fly Around [REMOVE AC FIRST!]',
+    Callback = function(bool)
+         
+    end
+})
+
+RightGroupbox:AddToggle('Noclip', {
+    Text = 'Noclip',
+    Default = false,
+    Tooltip = 'Can walk through walls',
+    Callback = function(bool)
+        if (bool) then
+            NoclipLoop = game:GetService("RunService").Stepped:Connect(function()
+                for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if v:IsA("BasePart") and v.CanCollide == true then
+                        v.CanCollide = false
+                    end
+                end
+            end)
+        elseif bool == false and NoclipLoop then
+            NoclipLoop:Disconnect()
+        end
+    end
+})
+
+
+RightGroupbox:AddToggle('Infj', {
+    Text = 'Infinite Jump',
+    Default = false,
+    Tooltip = 'Can jump infinitely',
+    Callback = function(Value)
+        _G.infinjump = (Value)
+
+            -- Get the local player and their mouse
+            local player = game:GetService("Players").LocalPlayer
+            local mouse = player:GetMouse()
+            
+            -- Listen for the spacebar key press to jump repeatedly
+            mouse.KeyDown:connect(function(key)
+                if _G.infinjump and key:byte() == 32 then
+                    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        humanoid:ChangeState("Jumping")
+                        wait(0.1)
+                        humanoid:ChangeState("Seated")
+                    end
+                end
+            end)
+    end
+})
+
+
+
+RightGroupbox:AddToggle('Bhop', {
+    Text = 'Bunnyhop',
+    Default = false,
+    Tooltip = 'Auto-Jump With Walkspeed, A so-called Bunnyhop',
+    Callback = function(Value)
+        _G.bhop = Value
+
+        local originalWalkSpeed = game.Players.LocalPlayer.Character.Humanoid.WalkSpeed
+        local originalGravity = game.Workspace.Gravity
+        local originalJumpPower = game.Players.LocalPlayer.Character.Humanoid.JumpPower
+        
+        if _G.bhop then
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 180
+            game.Workspace.Gravity = 500
+            game.Players.LocalPlayer.Character.Humanoid.JumpPower = 80
+            
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if _G.bhop then
+                    game.Players.LocalPlayer.Character.Humanoid.Jump = true
+                end
+            end)
+        else
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = originalWalkSpeed
+            game.Workspace.Gravity = originalGravity
+            game.Players.LocalPlayer.Character.Humanoid.JumpPower = originalJumpPower
+        end
+        
+        
+    end
+})
+
+RightGroupbox:AddToggle('Spin', {
+    Text = 'Spinner [BLATANT]',
+    Default = false,
+    Tooltip = 'Spin me round baby',
+    Callback = function(Value)
+        _G.enabled = (Value)
+    end
+})
+
+RightGroupbox:AddSlider('MySlider', {
+    Text = 'Spin Speed',
+    Default = 5,
+    Min = 1,
+    Max = 20,
+    Rounding = 1,
+    Compact = false,
+ 
+    Callback = function(Value)
+        if _G.enabled then
+            getgenv().urspeed = Value
+        else
+            getgenv().urspeed = 0
+        end --// Speed
+    end
+ })
+
+ --// Under all
+local L_165_ = false
+local L_166_ = game:GetService("UserInputService")
+
+L_166_.InputBegan:Connect(function(L_167_arg0, L_168_arg1)
+    if _G.enabled and L_165_ == false then
+        L_165_ = true
+        wait()
+        getgenv().urspeed = 500
+        local L_169_ = game.Players.LocalPlayer.Character
+        while wait() and _G.enabled do
+            L_169_.HumanoidRootPart.CFrame = L_169_.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(urspeed), 0)
+        end
+        L_165_ = false
+        getgenv().urspeed = 0
+    end
+end)
+
+game:GetService('RunService').Stepped:connect(function()
+    if (_G.enabled == false) then
+        stopTracks();
+    end
+end)
+
+local Bang = Tabs.Main:AddRightGroupbox('Basic Shit');
+
+Bang:AddToggle('Walkspeed', {
+    Text = 'Enable Walkspeed',
+    Default = false,
+    Tooltip = 'Enables the walkspeed toggle so the slider works',
+    Callback = function(Value)
+        walkspeedEnabled = Value
+        if not bool then
+            -- if the toggle is disabled, set the walkspeed to 16
+            game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = 16
+        end
+    end
+})
+
+
+Bang:AddSlider('Walkspeed', {
+    Text = 'Walkspeed Slider',
+    Default = 16,
+    Min = 16,
+    Max = 250,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        if walkspeedEnabled then
+            game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = Value
+        end
+    end
+})
+
+
+
+
+Bang:AddToggle('Jumppower', {
+    Text = 'Enable Jump Height',
+    Default = false,
+    Tooltip = 'Enables the Jumppower toggle so the slider works',
+    Callback = function(Value)
+        walkspeedEnabled = Value
+        if not bool then
+            -- if the toggle is disabled, set the walkspeed to 16
+            game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = 16
+        end
+    end
+})
+
+
+Bang:AddSlider('Jumppower', {
+    Text = 'Walkspeed Slider',
+    Default = 50,
+    Min = 50,
+    Max = 250,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        if walkspeedEnabled then
+            game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = Value
+        end
+    end
+})
+
+
+
+local Online = Tabs.Online:AddLeftGroupbox('Whole Server [⚠️⚠️⚠️]')
+
+Online:AddButton('Kill All', function() 
+    local Players = game:GetService("Players")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    
+    local client = Players.LocalPlayer
+    local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+    
+    local function killPlayer(player)
+        local character = player.Character
+        if character then
+            local instance = character:GetChildren()[1]
+            local args = {
+                19742,
+                {instance},
+                {
+                    ["DamageHumanoid"] = {
+                        ["Value"] = math.huge,
+                    },
+                    ["DamageVehicle"] = {
+                        ["Value"] = math.huge,
+                    },
+                    ["Explosive"] = {
+                        ["ExplosiveDamageHumanoid"] = {
+                            ["Value"] = math.huge,
+                        },
+                        ["ExplosiveDamageVehicle"] = {
+                            ["Value"] = math.huge,
+                        },
+                    },
+                },
+                Vector3.new(0,0,0)
+            }
+            remote:FireServer(unpack(args))
+        end
+    end
+    
+    for _,v in pairs(Players:GetPlayers()) do -- remove get players for name
+        killPlayer(v)
+    end
+end)
+
+Online:AddButton('Kill Others', function() 
+    local Players = game:GetService("Players")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    
+    local client = Players.LocalPlayer
+    local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+    
+    local function killPlayer(player)
+        local character = player.Character
+        if character then
+            local instance = character:GetChildren()[1]
+            local args = {
+                19742,
+                {instance},
+                {
+                    ["DamageHumanoid"] = {
+                        ["Value"] = math.huge,
+                    },
+                    ["DamageVehicle"] = {
+                        ["Value"] = math.huge,
+                    },
+                    ["Explosive"] = {
+                        ["ExplosiveDamageHumanoid"] = {
+                            ["Value"] = math.huge,
+                        },
+                        ["ExplosiveDamageVehicle"] = {
+                            ["Value"] = math.huge,
+                        },
+                    },
+                },
+                Vector3.new(0,0,0)
+            }
+            remote:FireServer(unpack(args))
+        end
+    end
+    
+    for _,v in pairs(Players:GetPlayers()) do
+        if v ~= Players.LocalPlayer then -- Check if the player is not the LocalPlayer
+            killPlayer(v)
+        end
+    end
+end)
+
+Online:AddButton('Kill Random', function() 
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    
+    local client = Players.LocalPlayer
+    local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+    
+    local function killPlayer(player)
+        local character = player.Character
+        if character then
+            local instance = character:GetChildren()[1]
+            local args = {
+                19742,
+                {instance},
+                {
+                    ["DamageHumanoid"] = {
+                        ["Value"] = math.huge,
+                    },
+                    ["DamageVehicle"] = {
+                        ["Value"] = math.huge,
+                    },
+                    ["Explosive"] = {
+                        ["ExplosiveDamageHumanoid"] = {
+                            ["Value"] = math.huge,
+                        },
+                        ["ExplosiveDamageVehicle"] = {
+                            ["Value"] = math.huge,
+                        },
+                    },
+                },
+                Vector3.new(0,0,0)
+            }
+            remote:FireServer(unpack(args))
+        end
+    end
+    
+    local playersList = Players:GetPlayers()
+    local randomIndex = math.random(1, #playersList)
+    local targetPlayer = playersList[randomIndex]
+    
+    killPlayer(targetPlayer)
+end)
+
+Online:AddButton('Kill All Politie', function()
+    local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local client = Players.LocalPlayer
+local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+
+local function killPlayer(player)
+    local character = player.Character
+    if character then
+        local instance = character:GetChildren()[1]
+        local args = {
+            19742,
+            {instance},
+            {
+                ["DamageHumanoid"] = {
+                    ["Value"] = math.huge,
+                },
+                ["DamageVehicle"] = {
+                    ["Value"] = math.huge,
+                },
+                ["Explosive"] = {
+                    ["ExplosiveDamageHumanoid"] = {
+                        ["Value"] = math.huge,
+                    },
+                    ["ExplosiveDamageVehicle"] = {
+                        ["Value"] = math.huge,
+                    },
+                },
+            },
+            Vector3.new(0,0,0)
+        }
+        remote:FireServer(unpack(args))
+    end
+end
+
+local targetTeamName = "Politie"
+
+for _, player in pairs(Players:GetPlayers()) do
+    if player.Team and player.Team.Name == targetTeamName then
+        killPlayer(player)
+    end
+end
+
+end)
+
+Online:AddButton('Kill All KMar', function()
+    local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local client = Players.LocalPlayer
+local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+
+local function killPlayer(player)
+    local character = player.Character
+    if character then
+        local instance = character:GetChildren()[1]
+        local args = {
+            19742,
+            {instance},
+            {
+                ["DamageHumanoid"] = {
+                    ["Value"] = math.huge,
+                },
+                ["DamageVehicle"] = {
+                    ["Value"] = math.huge,
+                },
+                ["Explosive"] = {
+                    ["ExplosiveDamageHumanoid"] = {
+                        ["Value"] = math.huge,
+                    },
+                    ["ExplosiveDamageVehicle"] = {
+                        ["Value"] = math.huge,
+                    },
+                },
+            },
+            Vector3.new(0,0,0)
+        }
+        remote:FireServer(unpack(args))
+    end
+end
+
+local targetTeamName = "Koningklijke Marechaussee"
+
+for _, player in pairs(Players:GetPlayers()) do
+    if player.Team and player.Team.Name == targetTeamName then
+        killPlayer(player)
+    end
+end
+
+end)
+
+Online:AddButton('Kill All DSI', function()
+    local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local client = Players.LocalPlayer
+local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+
+local function killPlayer(player)
+    local character = player.Character
+    if character then
+        local instance = character:GetChildren()[1]
+        local args = {
+            19742,
+            {instance},
+            {
+                ["DamageHumanoid"] = {
+                    ["Value"] = math.huge,
+                },
+                ["DamageVehicle"] = {
+                    ["Value"] = math.huge,
+                },
+                ["Explosive"] = {
+                    ["ExplosiveDamageHumanoid"] = {
+                        ["Value"] = math.huge,
+                    },
+                    ["ExplosiveDamageVehicle"] = {
+                        ["Value"] = math.huge,
+                    },
+                },
+            },
+            Vector3.new(0,0,0)
+        }
+        remote:FireServer(unpack(args))
+    end
+end
+
+local targetTeamName = "Dienst Speciale Interventies"
+
+for _, player in pairs(Players:GetPlayers()) do
+    if player.Team and player.Team.Name == targetTeamName then
+        killPlayer(player)
+    end
+end
+
+end)
+
+Online:AddButton('God All', function() 
+    local Players = game:GetService("Players")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    
+    local client = Players.LocalPlayer
+    local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+    
+    local function killPlayer(player)
+        local character = player.Character
+        if character then
+            local instance = character:GetChildren()[1]
+            local args = {
+                19742,
+                {instance},
+                {
+                    ["DamageHumanoid"] = {
+                        ["Value"] = -math.huge,
+                    },
+                    ["DamageVehicle"] = {
+                        ["Value"] = -math.huge,
+                    },
+                    ["Explosive"] = {
+                        ["ExplosiveDamageHumanoid"] = {
+                            ["Value"] = -math.huge,
+                        },
+                        ["ExplosiveDamageVehicle"] = {
+                            ["Value"] = -math.huge,
+                        },
+                    },
+                },
+                Vector3.new(0,0,0)
+            }
+            remote:FireServer(unpack(args))
+        end
+    end
+    
+    for _,v in pairs(Players:GetPlayers()) do -- remove get players for name
+        killPlayer(v)
+    end
+end)
+
+Online:AddButton('Heal All', function() 
+    local Players = game:GetService("Players")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    
+    local client = Players.LocalPlayer
+    local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+    
+    local function killPlayer(player)
+        local character = player.Character
+        if character then
+            local instance = character:GetChildren()[1]
+            local args = {
+                19742,
+                {instance},
+                {
+                    ["DamageHumanoid"] = {
+                        ["Value"] = -100,
+                    },
+                    ["DamageVehicle"] = {
+                        ["Value"] = -100,
+                    },
+                    ["Explosive"] = {
+                        ["ExplosiveDamageHumanoid"] = {
+                            ["Value"] = -100,
+                        },
+                        ["ExplosiveDamageVehicle"] = {
+                            ["Value"] = -100,
+                        },
+                    },
+                },
+                Vector3.new(0,0,0)
+            }
+            remote:FireServer(unpack(args))
+        end
+    end
+    
+    for _,v in pairs(Players:GetPlayers()) do -- remove get players for name
+        killPlayer(v)
+    end
+end)
+
+Online:AddButton('Damage All [50HP]', function() 
+    local Players = game:GetService("Players")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    
+    local client = Players.LocalPlayer
+    local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+    
+    local function killPlayer(player)
+        local character = player.Character
+        if character then
+            local instance = character:GetChildren()[1]
+            local args = {
+                19742,
+                {instance},
+                {
+                    ["DamageHumanoid"] = {
+                        ["Value"] = 50,
+                    },
+                    ["DamageVehicle"] = {
+                        ["Value"] = 50,
+                    },
+                    ["Explosive"] = {
+                        ["ExplosiveDamageHumanoid"] = {
+                            ["Value"] = 50,
+                        },
+                        ["ExplosiveDamageVehicle"] = {
+                            ["Value"] = 50,
+                        },
+                    },
+                },
+                Vector3.new(0,0,0)
+            }
+            remote:FireServer(unpack(args))
+        end
+    end
+    
+    for _,v in pairs(Players:GetPlayers()) do -- remove get players for name
+        killPlayer(v)
+    end
+end)
+
+Online:AddButton('Reaper Notify [⚠️ MAJOR RISK ⚠️]', function() 
+    local workspace = game:GetService("Workspace")
+    local locatiesFolder = workspace:FindFirstChild("Locaties")
+    
+    if locatiesFolder then
+        -- Create a new part and set its properties
+        local newPart = Instance.new("Part")
+        newPart.Name = "ReaperCheats.cc On Top! / Johnson#0069 / Love Naar Sander :D"
+        newPart.Size = Vector3.new(1, 1, 1)
+        newPart.Position = Vector3.new(0, 5, 0) -- Change the position as per your requirements
+        
+        -- Parent the new part to the Locaties folder
+        newPart.Parent = locatiesFolder
+    else
+        warn("Locaties folder not found in Workspace.")
+    end
+    wait()
+                game:GetService("ReplicatedStorage").Meldingen:FireServer("Berichtje Van Johnson!","ReaperCheats.xyz On Top! / Johnson#0069 / Love Naar Sander :D")
+    
+end)
+
+Online:AddButton('Lag Server Out [⚠️ MAJOR RISK ⚠️]', function() 
+local Message = "⛓" 
+local Unicode = " "
+Message = Message .. Unicode:rep(200 - #Message)
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local SayMessageRequest = ReplicatedStorage:FindFirstChild("SayMessageRequest", true)
+
+if SayMessageRequest then
+    for i = 1, 7 do
+        SayMessageRequest:FireServer(Message, "All")
+    end
+end
+end)
+
+Online:AddLabel('Whitelist Players', true)
+
+local whitelistedPlayers = {}
+
+Online:AddInput('whitelist', {
+    Default = 'Input FullName...',
+    Numeric = false,
+    Finished = false,
+    Text = 'Whitelist Player [Fullname]',
+    Tooltip = 'Whitelist The Player You Want [Fullname]',
+    Placeholder = 'Whitelist The Player You Want [Fullname]',
+    Callback = function(Value)
+     
+
+   local playerName = Value
+   local targetPlayer = game.Players:FindFirstChild(playerName)
+  
+      if not targetPlayer then
+          print("Player not found.")
+          return
+      end
+  
+      whitelistedPlayers[targetPlayer] = true
+  
+      -------------------------------------- COMMANDS FOR WHITELISTEDS --------------------------------------
+  
+      targetPlayer.Chatted:Connect(function(msg)
+          if whitelistedPlayers[targetPlayer] and string.sub(msg, 1, 5) == "-god " then
+              local targetPlayerName = string.sub(msg, 6) -- Extract the text after "-kill "
+              
+              local Players = game:GetService("Players")
+              local ReplicatedStorage = game:GetService("ReplicatedStorage")
+              
+              local client = Players.LocalPlayer
+              local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+              
+              local function killPlayer(player)
+                  local character = player.Character
+                  if character then
+                      local instance = character:GetChildren()[1]
+                      local args = {
+                          19742,
+                          {instance},
+                          {
+                              ["DamageHumanoid"] = {
+                                  ["Value"] = -math.huge,
+                              },
+                              ["DamageVehicle"] = {
+                                  ["Value"] = -math.huge,
+                              },
+                              ["Explosive"] = {
+                                  ["ExplosiveDamageHumanoid"] = {
+                                      ["Value"] = -math.huge,
+                                  },
+                                  ["ExplosiveDamageVehicle"] = {
+                                      ["Value"] = -math.huge,
+                                  },
+                              },
+                          },
+                          Vector3.new(0,0,0)
+                      }
+                      pcall(function()
+                          remote:FireServer(unpack(args))
+                      end)
+                  end
+              end
+              
+              for _, player in pairs(Players:GetPlayers()) do
+                  if player.Name:lower():find(targetPlayerName:lower()) then
+                      killPlayer(player)
+                  end
+              end
+          end
+      end)
+  
+      targetPlayer.Chatted:Connect(function(msg)
+          if whitelistedPlayers[targetPlayer] and string.sub(msg, 1, 6) == "-kill " then
+              local targetPlayerName = string.sub(msg, 7) -- Extract the text after "-kill "
+              
+              local Players = game:GetService("Players")
+              local ReplicatedStorage = game:GetService("ReplicatedStorage")
+              
+              local client = Players.LocalPlayer
+              local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+              
+              local function killPlayer(player)
+                  local character = player.Character
+                  if character then
+                      local instance = character:GetChildren()[1]
+                      local args = {
+                          19742,
+                          {instance},
+                          {
+                              ["DamageHumanoid"] = {
+                                  ["Value"] = math.huge,
+                              },
+                              ["DamageVehicle"] = {
+                                  ["Value"] = math.huge,
+                              },
+                              ["Explosive"] = {
+                                  ["ExplosiveDamageHumanoid"] = {
+                                      ["Value"] = math.huge,
+                                  },
+                                  ["ExplosiveDamageVehicle"] = {
+                                      ["Value"] = math.huge,
+                                  },
+                              },
+                          },
+                          Vector3.new(0,0,0)
+                      }
+                      pcall(function()
+                          remote:FireServer(unpack(args))
+                      end)
+                  end
+              end
+              
+              for _, player in pairs(Players:GetPlayers()) do
+                  if player.Name:lower():find(targetPlayerName:lower()) then
+                      killPlayer(player)
+                  end
+              end
+          end
+      end)
+      
+  
+      local loopKillEnabled = false
+  local loopKillConnection = nil
+  
+  local function findPlayerByName(partialName)
+      local Players = game:GetService("Players")
+      local lowerPartialName = partialName:lower()
+      
+      for _, player in ipairs(Players:GetPlayers()) do
+          local playerName = player.Name:lower()
+          local displayName = player.DisplayName and player.DisplayName:lower() or ""
+          
+          if playerName:find(lowerPartialName) or displayName:find(lowerPartialName) then
+              return player
+          end
+      end
+      
+      return nil
+  end
+  
+  local loopKillEnabled = false
+  local loopKillConnection = nil
+  
+  local function findPlayerByName(partialName)
+      local Players = game:GetService("Players")
+      local lowerPartialName = partialName:lower()
+      
+      for _, player in ipairs(Players:GetPlayers()) do
+          local playerName = player.Name:lower()
+          local displayName = player.DisplayName and player.DisplayName:lower() or ""
+          
+          if playerName:find(lowerPartialName) or displayName:find(lowerPartialName) then
+              return player
+          end
+      end
+      
+      return nil
+  end
+  
+  local Players = game:GetService("Players")
+  local ReplicatedStorage = game:GetService("ReplicatedStorage")
+  
+  local loopKillEnabled = false
+  local loopKillConnection = nil
+  
+  local function findPlayerByName(playerName)
+      for _, player in ipairs(Players:GetPlayers()) do
+          if player.Name == playerName then
+              return player
+          end
+      end
+      return nil
+  end
+  
+  local function killPlayer(player)
+      local character = player.Character
+      if character then
+          local instance = character:FindFirstChildOfClass("Humanoid")
+          if instance then
+              local args = {
+                  [1] = 19742,
+                  [2] = {instance},
+                  [3] = {
+                      DamageHumanoid = {
+                          Value = math.huge,
+                      },
+                      DamageVehicle = {
+                          Value = math.huge,
+                      },
+                      Explosive = {
+                          ExplosiveDamageHumanoid = {
+                              Value = math.huge,
+                          },
+                          ExplosiveDamageVehicle = {
+                              Value = math.huge,
+                          },
+                      },
+                  },
+                  [4] = Vector3.new(0, 0, 0),
+              }
+              local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+              remote:FireServer(unpack(args))
+          end
+      end
+  end
+  
+  local function startLoopKill(targetPlayer)
+      loopKillConnection = targetPlayer.CharacterAdded:Connect(function(character)
+          while loopKillEnabled do
+              killPlayer(targetPlayer)
+              wait(1) -- Wait before applying damage again
+          end
+      end)
+  end
+  
+      targetPlayer.Chatted:Connect(function(msg)
+          if whitelistedPlayers[targetPlayer] and msg == "-loopkill " then
+              local targetName = Arguments[1]
+      local Players = game:GetService("Players")
+      
+      local function findPlayerByName(name)
+          for _, player in pairs(Players:GetPlayers()) do
+              if player.Name:lower() == name:lower() or player.DisplayName:lower() == name:lower() or player.DisplayName:lower():find(name:lower()) or player.Name:lower():find(name:lower()) then
+                  return player
+              end
+          end
+          return nil
+      end
+  
+      local targetPlayer = findPlayerByName(targetName)
+  
+      if targetPlayer then
+          loopKillEnabled = true
+          startLoopKill(targetPlayer)
+  
+          local ReplicatedStorage = game:GetService("ReplicatedStorage")
+          local client = Players.LocalPlayer
+          local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+          
+          local function killPlayer(player)
+              local character = player.Character
+              if character then
+                  local instance = character:GetChildren()[1]
+                  local args = {
+                      19742,
+                      {instance},
+                      {
+                          ["DamageHumanoid"] = {
+                              ["Value"] = math.huge,
+                          },
+                          ["DamageVehicle"] = {
+                              ["Value"] = math.huge,
+                          },
+                          ["Explosive"] = {
+                              ["ExplosiveDamageHumanoid"] = {
+                                  ["Value"] = math.huge,
+                              },
+                              ["ExplosiveDamageVehicle"] = {
+                                  ["Value"] = math.huge,
+                              },
+                          },
+                      },
+                      Vector3.new(0,0,0)
+                  }
+                  remote:FireServer(unpack(args))
+              end
+          end
+          
+          killPlayer(targetPlayer)
+      else
+          Window:CreateNotification('LoopKill:', 'Player not found.', 5)
+      end
+          end
+      end)
+  
+      targetPlayer.Chatted:Connect(function(msg)
+          if whitelistedPlayers[targetPlayer] and msg == "-unloopkill " then
+              loopKillEnabled = false
+              if loopKillConnection then
+                  loopKillConnection:Disconnect()
+                  loopKillConnection = nil
+                  Window:CreateNotification('UnLoopKill:', 'LoopKill disabled.', 5)
+              else
+                  Window:CreateNotification('UnLoopKill:', 'LoopKill not active.', 5)
+              end
+          end
+      end)
+  
+    
+  
+      targetPlayer.Chatted:Connect(function(msg)
+          if whitelistedPlayers[targetPlayer] and string.sub(msg, 1, 9) == "-damage50 " then
+              local targetPlayerName = string.sub(msg, 10) -- Extract the text after "-kill "
+              
+              local Players = game:GetService("Players")
+              local ReplicatedStorage = game:GetService("ReplicatedStorage")
+              
+              local client = Players.LocalPlayer
+              local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+              
+              local function killPlayer(player)
+                  local character = player.Character
+                  if character then
+                      local instance = character:GetChildren()[1]
+                      local args = {
+                          19742,
+                          {instance},
+                          {
+                              ["DamageHumanoid"] = {
+                                  ["Value"] = 50,
+                              },
+                              ["DamageVehicle"] = {
+                                  ["Value"] = 50,
+                              },
+                              ["Explosive"] = {
+                                  ["ExplosiveDamageHumanoid"] = {
+                                      ["Value"] = 50,
+                                  },
+                                  ["ExplosiveDamageVehicle"] = {
+                                      ["Value"] = 50,
+                                  },
+                              },
+                          },
+                          Vector3.new(0,0,0)
+                      }
+                      pcall(function()
+                          remote:FireServer(unpack(args))
+                      end)
+                  end
+              end
+              
+              for _, player in pairs(Players:GetPlayers()) do
+                  if player.Name:lower():find(targetPlayerName:lower()) then
+                      killPlayer(player)
+                  end
+              end
+          end
+          
+      end)
+  
+      targetPlayer.Chatted:Connect(function(msg)
+          if whitelistedPlayers[targetPlayer] and string.sub(msg, 1, 12) == "-killall " then
+              local Players = game:GetService("Players")
+              local ReplicatedStorage = game:GetService("ReplicatedStorage")
+              
+              local client = Players.LocalPlayer
+              local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+              
+              local function killPlayer(player)
+                  local character = player.Character
+                  if character then
+                      local instance = character:GetChildren()[1]
+                      local args = {
+                          19742,
+                          {instance},
+                          {
+                              ["DamageHumanoid"] = {
+                                  ["Value"] = math.huge,
+                              },
+                              ["DamageVehicle"] = {
+                                  ["Value"] = math.huge,
+                              },
+                              ["Explosive"] = {
+                                  ["ExplosiveDamageHumanoid"] = {
+                                      ["Value"] = math.huge,
+                                  },
+                                  ["ExplosiveDamageVehicle"] = {
+                                      ["Value"] = math.huge,
+                                  },
+                              },
+                          },
+                          Vector3.new(0,0,0)
+                      }
+                      remote:FireServer(unpack(args))
+                  end
+              end
+              
+              for _,v in pairs(Players:GetPlayers()) do -- remove get players for name
+                  killPlayer(v)
+              end
+          end
+      end)
+  
+  
+      targetPlayer.Chatted:Connect(function(msg)
+          if whitelistedPlayers[targetPlayer] and string.sub(msg, 1, 12) == "-killothers " then
+              local Players = game:GetService("Players")
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      
+      local client = Players.LocalPlayer
+      local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+      
+      local function killPlayer(player)
+          local character = player.Character
+          if character then
+              local instance = character:GetChildren()[1]
+              local args = {
+                  19742,
+                  {instance},
+                  {
+                      ["DamageHumanoid"] = {
+                          ["Value"] = math.huge,
+                      },
+                      ["DamageVehicle"] = {
+                          ["Value"] = math.huge,
+                      },
+                      ["Explosive"] = {
+                          ["ExplosiveDamageHumanoid"] = {
+                              ["Value"] = math.huge,
+                          },
+                          ["ExplosiveDamageVehicle"] = {
+                              ["Value"] = math.huge,
+                          },
+                      },
+                  },
+                  Vector3.new(0,0,0)
+              }
+              remote:FireServer(unpack(args))
+          end
+      end
+      
+      for _,v in pairs(Players:GetPlayers()) do
+          if v ~= Players.LocalPlayer then -- Check if the player is not the LocalPlayer
+              killPlayer(v)
+          end
+      end
+          end
+      end)
+  
+  
+      targetPlayer.Chatted:Connect(function(msg)
+          if whitelistedPlayers[targetPlayer] and string.sub(msg, 1, 13) == "-killrandom " then
+              local ReplicatedStorage = game:GetService("ReplicatedStorage")
+          
+              local client = Players.LocalPlayer
+              local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+              
+              local function killPlayer(player)
+                  local character = player.Character
+                  if character then
+                      local instance = character:GetChildren()[1]
+                      local args = {
+                          19742,
+                          {instance},
+                          {
+                              ["DamageHumanoid"] = {
+                                  ["Value"] = math.huge,
+                              },
+                              ["DamageVehicle"] = {
+                                  ["Value"] = math.huge,
+                              },
+                              ["Explosive"] = {
+                                  ["ExplosiveDamageHumanoid"] = {
+                                      ["Value"] = math.huge,
+                                  },
+                                  ["ExplosiveDamageVehicle"] = {
+                                      ["Value"] = math.huge,
+                                  },
+                              },
+                          },
+                          Vector3.new(0,0,0)
+                      }
+                      remote:FireServer(unpack(args))
+                  end
+              end
+              
+              local playersList = Players:GetPlayers()
+              local randomIndex = math.random(1, #playersList)
+              local targetPlayer = playersList[randomIndex]
+              
+              killPlayer(targetPlayer)
+          end
+      end)
+  
+  
+      targetPlayer.Chatted:Connect(function(msg)
+          if whitelistedPlayers[targetPlayer] and string.sub(msg, 1, 10) == "-killpolitie " then
+              local Players = game:GetService("Players")
+  local Teams = game:GetService("Teams")
+  local ReplicatedStorage = game:GetService("ReplicatedStorage")
+  
+  local client = Players.LocalPlayer
+  local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+  
+  local teamName = "Politie" -- Change this to the desired team name
+  
+  local function killPlayer(player)
+      local character = player.Character
+      if character then
+          local instance = character:FindFirstChild("Humanoid")
+          if instance then
+              local args = {
+                  19742,
+                  {instance.Parent},
+                  {
+                      ["DamageHumanoid"] = {
+                          ["Value"] = math.huge,
+                      },
+                      ["DamageVehicle"] = {
+                          ["Value"] = math.huge,
+                      },
+                      ["Explosive"] = {
+                          ["ExplosiveDamageHumanoid"] = {
+                              ["Value"] = math.huge,
+                          },
+                          ["ExplosiveDamageVehicle"] = {
+                              ["Value"] = math.huge,
+                          },
+                      },
+                  },
+                  Vector3.new(0, 0, 0)
+              }
+              remote:FireServer(unpack(args))
+          end
+      end
+  end
+  
+  local politieTeam = Teams:FindFirstChild(teamName)
+  if politieTeam then
+      for _, v in pairs(Players:GetPlayers()) do
+          if v.Team == politieTeam and v ~= Players.LocalPlayer then
+              killPlayer(v)
+          end
+      end
+  end
+  
+          end
+      end)
+  
+      targetPlayer.Chatted:Connect(function(msg)
+          if whitelistedPlayers[targetPlayer] and string.sub(msg, 1, 9) == "-killkmar " then
+              local Players = game:GetService("Players")
+              local Teams = game:GetService("Teams")
+              local ReplicatedStorage = game:GetService("ReplicatedStorage")
+              
+              local client = Players.LocalPlayer
+              local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+              
+              local teamName = "Koningklijke Marcusse." -- Change this to the desired team name
+              
+              local function killPlayer(player)
+                  local character = player.Character
+                  if character then
+                      local instance = character:FindFirstChild("Humanoid")
+                      if instance then
+                          local args = {
+                              19742,
+                              {instance.Parent},
+                              {
+                                  ["DamageHumanoid"] = {
+                                      ["Value"] = math.huge,
+                                  },
+                                  ["DamageVehicle"] = {
+                                      ["Value"] = math.huge,
+                                  },
+                                  ["Explosive"] = {
+                                      ["ExplosiveDamageHumanoid"] = {
+                                          ["Value"] = math.huge,
+                                      },
+                                      ["ExplosiveDamageVehicle"] = {
+                                          ["Value"] = math.huge,
+                                      },
+                                  },
+                              },
+                              Vector3.new(0, 0, 0)
+                          }
+                          remote:FireServer(unpack(args))
+                      end
+                  end
+              end
+              
+              local politieTeam = Teams:FindFirstChild(teamName)
+              if politieTeam then
+                  for _, v in pairs(Players:GetPlayers()) do
+                      if v.Team == politieTeam and v ~= Players.LocalPlayer then
+                          killPlayer(v)
+                      end
+                  end
+              end
+              
+          end
+      end)
+  
+      targetPlayer.Chatted:Connect(function(msg)
+          if whitelistedPlayers[targetPlayer] and string.sub(msg, 1, 8) == "-killdsi " then
+              local Players = game:GetService("Players")
+  local Teams = game:GetService("Teams")
+  local ReplicatedStorage = game:GetService("ReplicatedStorage")
+  
+  local client = Players.LocalPlayer
+  local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+  
+  local teamName = "Dienst Speciale Interventies" -- Change this to the desired team name
+  
+  local function killPlayer(player)
+      local character = player.Character
+      if character then
+          local instance = character:FindFirstChild("Humanoid")
+          if instance then
+              local args = {
+                  19742,
+                  {instance.Parent},
+                  {
+                      ["DamageHumanoid"] = {
+                          ["Value"] = math.huge,
+                      },
+                      ["DamageVehicle"] = {
+                          ["Value"] = math.huge,
+                      },
+                      ["Explosive"] = {
+                          ["ExplosiveDamageHumanoid"] = {
+                              ["Value"] = math.huge,
+                          },
+                          ["ExplosiveDamageVehicle"] = {
+                              ["Value"] = math.huge,
+                          },
+                      },
+                  },
+                  Vector3.new(0, 0, 0)
+              }
+              remote:FireServer(unpack(args))
+          end
+      end
+  end
+  
+  local politieTeam = Teams:FindFirstChild(teamName)
+  if politieTeam then
+      for _, v in pairs(Players:GetPlayers()) do
+          if v.Team == politieTeam and v ~= Players.LocalPlayer then
+              killPlayer(v)
+          end
+  end
+  end
+  end
+      end)
+  
+      targetPlayer.Chatted:Connect(function(msg)
+          if whitelistedPlayers[targetPlayer] and string.sub(msg, 1, 15) == "-damageall50 " then
+              local Players = game:GetService("Players")
+              local ReplicatedStorage = game:GetService("ReplicatedStorage")
+              
+              local client = Players.LocalPlayer
+              local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+              
+              local function killPlayer(player)
+                  local character = player.Character
+                  if character then
+                      local instance = character:GetChildren()[1]
+                      local args = {
+                          19742,
+                          {instance},
+                          {
+                              ["DamageHumanoid"] = {
+                                  ["Value"] = 50,
+                              },
+                              ["DamageVehicle"] = {
+                                  ["Value"] = 50,
+                              },
+                              ["Explosive"] = {
+                                  ["ExplosiveDamageHumanoid"] = {
+                                      ["Value"] = 50,
+                                  },
+                                  ["ExplosiveDamageVehicle"] = {
+                                      ["Value"] = 50,
+                                  },
+                              },
+                          },
+                          Vector3.new(0,0,0)
+                      }
+                      remote:FireServer(unpack(args))
+                  end
+              end
+              
+              for _,v in pairs(Players:GetPlayers()) do -- remove get players for name
+                  killPlayer(v)
+              end
+          end
+      end)
+  
+  
+      targetPlayer.Chatted:Connect(function(msg)
+          if whitelistedPlayers[targetPlayer] and string.sub(msg, 1, 13) == "-fullhealall " then
+              local Players = game:GetService("Players")
+          local ReplicatedStorage = game:GetService("ReplicatedStorage")
+          
+          local client = Players.LocalPlayer
+          local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+          
+          local function killPlayer(player)
+              local character = player.Character
+              if character then
+                  local instance = character:GetChildren()[1]
+                  local args = {
+                      19742,
+                      {instance},
+                      {
+                          ["DamageHumanoid"] = {
+                              ["Value"] = -100,
+                          },
+                          ["DamageVehicle"] = {
+                              ["Value"] = -100,
+                          },
+                          ["Explosive"] = {
+                              ["ExplosiveDamageHumanoid"] = {
+                                  ["Value"] = -100,
+                              },
+                              ["ExplosiveDamageVehicle"] = {
+                                  ["Value"] = -100,
+                              },
+                          },
+                      },
+                      Vector3.new(0,0,0)
+                  }
+                  remote:FireServer(unpack(args))
+              end
+          end
+          
+          for _,v in pairs(Players:GetPlayers()) do -- remove get players for name
+              killPlayer(v)
+          end
+          end
+      end)
+  
+      targetPlayer.Chatted:Connect(function(msg)
+          if whitelistedPlayers[targetPlayer] and string.sub(msg, 1, 13) == "-halfhealall " then
+                  local Players = game:GetService("Players")
+              local ReplicatedStorage = game:GetService("ReplicatedStorage")
+              
+              local client = Players.LocalPlayer
+              local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+              
+              local function killPlayer(player)
+                  local character = player.Character
+                  if character then
+                      local instance = character:GetChildren()[1]
+                      local args = {
+                          19742,
+                          {instance},
+                          {
+                              ["DamageHumanoid"] = {
+                                  ["Value"] = -50,
+                              },
+                              ["DamageVehicle"] = {
+                                  ["Value"] = -50,
+                              },
+                              ["Explosive"] = {
+                                  ["ExplosiveDamageHumanoid"] = {
+                                      ["Value"] = -50,
+                                  },
+                                  ["ExplosiveDamageVehicle"] = {
+                                      ["Value"] = -50,
+                                  },
+                              },
+                          },
+                          Vector3.new(0,0,0)
+                      }
+                      remote:FireServer(unpack(args))
+                  end
+              end
+              
+              for _,v in pairs(Players:GetPlayers()) do -- remove get players for name
+                  killPlayer(v)
+              end
+              end
+      end)
+  
+      -------------------------------------- END COMMANDS FOR WHITELISTEDS --------------------------------------
+  
+    end
+})
+
+Online:AddLabel('Available Commands Counted: 17 Prefix: - \n-god <plr>\n-kill <plr>\n-bring <plr>\n-loopkill <plr>\n-unloopkill <plr>\n-fullheal <plr>\n-halfheal <plr>\n-damage50 <plr>\n-killall\n-killothers\n-killrandom\n-killpolitie\n-killkmar\n-killdsi\n-damageall50\n-fullhealall\n-halfhealall', true)
+--[[ Online:AddLabel('Prefix: /', true)
+Online:AddLabel('/kill <name>', true)
+Online:AddLabel('/heal <name> <amount>', true)
+Online:AddLabel('/god <name>', true)
+Online:AddLabel('/damage <name> <amount>', true)
+Online:AddLabel('/killall', true) --]]
+
+
+local Online = Tabs.Online:AddRightGroupbox('Single Player Functions [⚠️⚠️]');
+
+local selectedPlayer = nil
+
+local playerValues = {"None Selected"}
+
+local function updatePlayerValues()
+    playerValues = {"None Selected"}
+    for _, player in ipairs(game:GetService("Players"):GetPlayers()) do
+        table.insert(playerValues, player.Name)
+    end
+end
+
+updatePlayerValues()
+
+local function updateDropdownValues()
+    Options.Showserver:SetValues(playerValues)
+end
+
+Online:AddDropdown('Showserver', {
+    Values = playerValues,
+    Default = 1,
+    Multi = false,
+
+    Text = 'Select Target Here',
+    Tooltip = 'Select Your Target',
+
+    Callback = function(val)
+        selectedPlayer = val
+    end
+})
+
+Options.Showserver:OnChanged(function()
+    print("Dropdown got changed. New value:", selectedPlayer)
+end)
+
+game:GetService("Players").PlayerAdded:Connect(function(player)
+    updatePlayerValues()
+    updateDropdownValues()
+end)
+
+game:GetService("Players").PlayerRemoving:Connect(function(player)
+    updatePlayerValues()
+    updateDropdownValues()
+end)
+
+Online:AddLabel('Functions | Moderation System', true)
+
+Online:AddToggle('View', {
+    Text = 'View Target',
+    Default = false,
+    Tooltip = 'Views the target',
+    Callback = function(Value)
+        if Value then
+            local playerName = selectedPlayer
+
+            local player = nil
+            for _, p in pairs(game:GetService("Players"):GetPlayers()) do
+                if string.find(p.Name:lower(), playerName:lower()) then
+                    player = p
+                    break
+                end
+            end
+
+            if player then
+                game.Workspace.CurrentCamera.CameraSubject = player.Character.Humanoid
+            else
+                local player = game:GetService("Players").LocalPlayer
+                game.Workspace.CurrentCamera.CameraSubject = player.Character.Humanoid
+            end
+        else
+            game.Workspace.CurrentCamera.CameraSubject = game:GetService("Players").LocalPlayer.Character.Humanoid
+        end
+    end
+})
+
+
+Online:AddToggle('looptp', {
+    Text = 'LoopTP To Target',
+    Default = false,
+    Tooltip = 'LoopTP You To The Target',
+    Callback = function(Value)
+        loopTeleport = Value
+        if loopTeleport then
+            while loopTeleport do
+                -- Replace "TO" with the partial or full username of the player you want to teleport to
+                local partialName = selectedPlayer
+                local Players = game:GetService("Players")
+                local player = nil
+                for _, p in ipairs(Players:GetPlayers()) do
+                    if string.find(string.lower(p.Name), string.lower(partialName)) then
+                        player = p
+                        break
+                    end
+                end
+                if player then
+                    local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
+                    local p2 = player.Name
+                    local pos = p1.CFrame
+                    p1.CFrame = game.Players[p2].Character.HumanoidRootPart.CFrame
+                else
+                    print("Could not find player with name containing '" .. partialName .. "'")
+                end
+                wait() -- wait 1 second before teleporting again
+            end
+        else
+            print("Uit")
+        end
+    end
+})
+
+
+
+
+Online:AddButton('TP To Target', function() 
+     -- Replace "TO" with the partial or full username of the player you want to teleport to
+local partialName = selectedPlayer
+
+local Players = game:GetService("Players")
+local player = nil
+for _, p in ipairs(Players:GetPlayers()) do
+if string.find(string.lower(p.Name), string.lower(partialName)) then
+player = p
+break
+end
+end
+
+if player then
+local p1 = game.Players.LocalPlayer.Character.HumanoidRootPart
+local p2 = player.Name
+local pos = p1.CFrame
+p1.CFrame = game.Players[p2].Character.HumanoidRootPart.CFrame
+else
+    print("Could not find player with name containing '" .. partialName .. "'")
+    end
+end)
+
+Online:AddButton('Bring Target', function() 
+    NotificationLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/lobox920/Notification-Library/Main/Library.lua"))()
+    NotificationLibrary:SendNotification("Info", "Reapers Bring: When You TP To Target Hold E", 5)
+       wait(0.5)
+       NotificationLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/lobox920/Notification-Library/Main/Library.lua"))()
+       NotificationLibrary:SendNotification("Info", "Reapers Bring: When You TP To Target Hold E", 5)
+       wait(0.5)
+       NotificationLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/lobox920/Notification-Library/Main/Library.lua"))()
+       NotificationLibrary:SendNotification("Info", "Reapers Bring: GET READY", 5)
+    wait(3)
+   
+   -- Store the original position before the loop
+   local originalCFrame = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame
+   
+   -- Check if the fist tool exists in the player's backpack
+   local playerBackpack = game:GetService("Players").LocalPlayer.Backpack
+   local fistTool = playerBackpack:FindFirstChild("Tiewraps")  -- Change "Tiewraps" to the actual tool name
+   if fistTool then
+       -- Equip the fist tool
+       game:GetService("Players").LocalPlayer.Character.Humanoid:EquipTool(fistTool)  -- Change "TiewrapsTool" to "fistTool"
+   end
+   
+   -- Username selector: Find the selected player in the game
+   local selectedPlayer = selectedPlayer  -- Change "UsernameHere" to the actual username
+   local selectedPlayerObject = game:GetService("Players"):FindFirstChild(selectedPlayer)
+   if selectedPlayerObject then
+       local startTime = tick()  -- Get the current time in seconds
+       local duration = 4  -- Duration of the loop in seconds
+   
+       while tick() - startTime < duration do
+           -- Teleport to the selected player
+           game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = selectedPlayerObject.Character.HumanoidRootPart.CFrame
+           wait() -- Wait for the next loop iteration
+       end
+   end
+   
+   -- Return to the original position
+   game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = originalCFrame
+   
+                    
+end)
+
+Online:AddButton('Info Of Target', function() 
+    local partialPlayerName = selectedPlayer
+
+    local Players = game:GetService("Players")
+
+    local function getPlayerInfo(player)
+        local character = player.Character
+        if character then
+            local humanoid = character:FindFirstChild("Humanoid")
+            local accountAge = player.AccountAge
+            local isInCar = false
+
+            local vehicle = character:FindFirstChildOfClass("VehicleSeat")
+            if vehicle then
+                isInCar = true
+            end
+
+            local leaderstatsInfo = ""
+
+            local leaderstats = player:FindFirstChild("leaderstats")
+            if leaderstats then
+                leaderstatsInfo = string.format("Contant Geld: %d\nBank Geld: %d\nZwart Geld: %d",
+                    leaderstats.Geld.Value,
+                    leaderstats.Bank.Value,
+                    leaderstats.Zwartgeld.Value
+                )
+            else
+                leaderstatsInfo = "No leaderstats found."
+            end
+
+            local infoString = string.format("Name: %s\nDisplayName: %s\nHealth: %.2f\nAccount Age: %s\nIs In Car: %s\nLeaderstats:\n%s",
+                player.Name,
+                player.DisplayName or "N/A",
+                humanoid and humanoid.Health or 0,
+                accountAge,
+                isInCar and "Yes" or "No",
+                leaderstatsInfo
+            )
+
+            return infoString
+        else
+            return "Player is not in the game."
+        end
+    end
+
+    local targetPlayer = nil
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.Name:lower():find(partialPlayerName:lower()) or (player.DisplayName and player.DisplayName:lower():find(partialPlayerName:lower())) then
+            targetPlayer = player
+            break
+        end
+    end
+
+    if targetPlayer then
+        local info = getPlayerInfo(targetPlayer)
+
+        local NotificationLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/lobox920/Notification-Library/Main/Library.lua"))()
+        NotificationLibrary:SendNotification("Info", "[F.B.I] Target Information:", info, 5)
+    else
+        local NotificationLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/lobox920/Notification-Library/Main/Library.lua"))()
+        NotificationLibrary:SendNotification("Error", "Player Not Found, Did He Leave?", 5)
+    end
+end)
+
+
+Online:AddLabel('Functions | Trolling.', true)
+
+-- render lkill
+
+Online:AddButton('LoopKill Target', function() 
+    local targetName = selectedPlayer
+    local Players = game:GetService("Players")
+    
+    local function findPlayerByName(name)
+        for _, player in pairs(Players:GetPlayers()) do
+            if player.Name:lower() == name:lower() or player.DisplayName:lower() == name:lower() or player.DisplayName:lower():find(name:lower()) or player.Name:lower():find(name:lower()) then
+                return player
+            end
+        end
+        return nil
+    end
+
+    local targetPlayer = findPlayerByName(targetName)
+
+    if targetPlayer then
+        loopKillEnabled = true
+        startLoopKill(targetPlayer)
+
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        local client = Players.LocalPlayer
+        local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+        
+        local function killPlayer(player)
+            local character = player.Character
+            if character then
+                local instance = character:GetChildren()[1]
+                local args = {
+                    19742,
+                    {instance},
+                    {
+                        ["DamageHumanoid"] = {
+                            ["Value"] = math.huge,
+                        },
+                        ["DamageVehicle"] = {
+                            ["Value"] = math.huge,
+                        },
+                        ["Explosive"] = {
+                            ["ExplosiveDamageHumanoid"] = {
+                                ["Value"] = math.huge,
+                            },
+                            ["ExplosiveDamageVehicle"] = {
+                                ["Value"] = math.huge,
+                            },
+                        },
+                    },
+                    Vector3.new(0,0,0)
+                }
+                remote:FireServer(unpack(args))
+            end
+        end
+        
+        killPlayer(targetPlayer)
+    else
+        NotificationLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/lobox920/Notification-Library/Main/Library.lua"))()
+        NotificationLibrary:SendNotification("Error", "Player Not Found", 3)
+    end
+end)
+
+Online:AddButton('UnLoopKill Target', function() 
+    loopKillEnabled = false
+    if loopKillConnection then
+        loopKillConnection:Disconnect()
+        loopKillConnection = nil
+        NotificationLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/lobox920/Notification-Library/Main/Library.lua"))()
+        NotificationLibrary:SendNotification("Success", "Loopkill Disabled.", 3)
+ 
+    else
+        NotificationLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/lobox920/Notification-Library/Main/Library.lua"))()
+        NotificationLibrary:SendNotification("Error", "Loopkill Not Active.", 3)
+    end
+end)
+
+
+Online:AddButton('Kill Target', function() 
+    if selectedPlayer then
+        local targetPlayerName = selectedPlayer
+
+        local Players = game:GetService("Players")
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+        local client = Players.LocalPlayer
+        local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+
+        local function killPlayer(player)
+            local character = player.Character
+            if character then
+                local instance = character:GetChildren()[1]
+                local args = {
+                    19742,
+                    {instance},
+                    {
+                        ["DamageHumanoid"] = {
+                            ["Value"] = math.huge,
+                        },
+                        ["DamageVehicle"] = {
+                            ["Value"] = math.huge,
+                        },
+                        ["Explosive"] = {
+                            ["ExplosiveDamageHumanoid"] = {
+                                ["Value"] = math.huge,
+                            },
+                            ["ExplosiveDamageVehicle"] = {
+                                ["Value"] = math.huge,
+                            },
+                        },
+                    },
+                    Vector3.new(0,0,0)
+                }
+                remote:FireServer(unpack(args))
+            end
+        end
+
+        for _,player in pairs(Players:GetPlayers()) do
+            if player.Name == targetPlayerName then
+                killPlayer(player)
+            end
+        end
+    end
+end)
+
+
+
+
+
+
+
+Online:AddButton('Damage Target [50HP]', function() 
+    if selectedPlayer then
+        local targetPlayerName = selectedPlayer
+
+        local Players = game:GetService("Players")
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+        local client = Players.LocalPlayer
+        local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+
+        local function killPlayer(player)
+            local character = player.Character
+            if character then
+                local instance = character:GetChildren()[1]
+                local args = {
+                    19742,
+                    {instance},
+                    {
+                        ["DamageHumanoid"] = {
+                            ["Value"] = 50,
+                        },
+                        ["DamageVehicle"] = {
+                            ["Value"] = 50,
+                        },
+                        ["Explosive"] = {
+                            ["ExplosiveDamageHumanoid"] = {
+                                ["Value"] = 50,
+                            },
+                            ["ExplosiveDamageVehicle"] = {
+                                ["Value"] = 50,
+                            },
+                        },
+                    },
+                    Vector3.new(0,0,0)
+                }
+                remote:FireServer(unpack(args))
+            end
+        end
+
+        for _,player in pairs(Players:GetPlayers()) do
+            if player.Name == targetPlayerName then
+                killPlayer(player)
+            end
+        end
+    end
+end)
+
+Online:AddLabel('Functions | Friendly.', true)
+
+Online:AddButton('God Target', function() 
+    if selectedPlayer then
+        local targetPlayerName = selectedPlayer
+
+        local Players = game:GetService("Players")
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+        local client = Players.LocalPlayer
+        local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+
+        local function killPlayer(player)
+            local character = player.Character
+            if character then
+                local instance = character:GetChildren()[1]
+                local args = {
+                    19742,
+                    {instance},
+                    {
+                        ["DamageHumanoid"] = {
+                            ["Value"] = -math.huge,
+                        },
+                        ["DamageVehicle"] = {
+                            ["Value"] = -math.huge,
+                        },
+                        ["Explosive"] = {
+                            ["ExplosiveDamageHumanoid"] = {
+                                ["Value"] = -math.huge,
+                            },
+                            ["ExplosiveDamageVehicle"] = {
+                                ["Value"] = -math.huge,
+                            },
+                        },
+                    },
+                    Vector3.new(0,0,0)
+                }
+                remote:FireServer(unpack(args))
+            end
+        end
+
+        for _,player in pairs(Players:GetPlayers()) do
+            if player.Name == targetPlayerName then
+                killPlayer(player)
+            end
+        end
+    end
+end)
+
+Online:AddButton('Fully Heal Target', function() 
+    if selectedPlayer then
+        local targetPlayerName = selectedPlayer
+
+        local Players = game:GetService("Players")
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+        local client = Players.LocalPlayer
+        local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+
+        local function killPlayer(player)
+            local character = player.Character
+            if character then
+                local instance = character:GetChildren()[1]
+                local args = {
+                    19742,
+                    {instance},
+                    {
+                        ["DamageHumanoid"] = {
+                            ["Value"] = -100,
+                        },
+                        ["DamageVehicle"] = {
+                            ["Value"] = -100,
+                        },
+                        ["Explosive"] = {
+                            ["ExplosiveDamageHumanoid"] = {
+                                ["Value"] = -100,
+                            },
+                            ["ExplosiveDamageVehicle"] = {
+                                ["Value"] = -100,
+                            },
+                        },
+                    },
+                    Vector3.new(0,0,0)
+                }
+                remote:FireServer(unpack(args))
+            end
+        end
+
+        for _,player in pairs(Players:GetPlayers()) do
+            if player.Name == targetPlayerName then
+                killPlayer(player)
+            end
+        end
+    end
+end)
+
+Online:AddButton('Half Heal Target', function() 
+    if selectedPlayer then
+        local targetPlayerName = selectedPlayer
+
+        local Players = game:GetService("Players")
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+        local client = Players.LocalPlayer
+        local remote = ReplicatedStorage.WeaponFrameworkRep.Events.Damage
+
+        local function killPlayer(player)
+            local character = player.Character
+            if character then
+                local instance = character:GetChildren()[1]
+                local args = {
+                    19742,
+                    {instance},
+                    {
+                        ["DamageHumanoid"] = {
+                            ["Value"] = -50,
+                        },
+                        ["DamageVehicle"] = {
+                            ["Value"] = -50,
+                        },
+                        ["Explosive"] = {
+                            ["ExplosiveDamageHumanoid"] = {
+                                ["Value"] = -50,
+                            },
+                            ["ExplosiveDamageVehicle"] = {
+                                ["Value"] = -50,
+                            },
+                        },
+                    },
+                    Vector3.new(0,0,0)
+                }
+                remote:FireServer(unpack(args))
+            end
+        end
+
+        for _,player in pairs(Players:GetPlayers()) do
+            if player.Name == targetPlayerName then
+                killPlayer(player)
+            end
+        end
+    end
+end)
+
+
+
+
+
+
+
+
+--[[ -- commands function begin
+--//Kill
+game.Players.DomainXTesting.Chatted:Connect(function(msg)
+    local args = string.split(msg, " ")
+    if args[1] == "/kill" then
+        local targetPlayerName = args[2]
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            if player.Name == targetPlayerName then
+                killPlayer(player)
+            end
+        end
+    end
+end)
+
+function killPlayer(player)
+    local character = player.Character
+    if character then
+        local instance = character.PrimaryPart
+        local args = {
+            19742,
+            {instance},
+            {
+                ["DamageHumanoid"] = {
+                    ["Value"] = math.huge,
+                },
+                ["DamageVehicle"] = {
+                    ["Value"] = math.huge,
+                },
+                ["Explosive"] = {
+                    ["ExplosiveDamageHumanoid"] = {
+                        ["Value"] = math.huge,
+                    },
+                    ["ExplosiveDamageVehicle"] = {
+                        ["Value"] = math.huge,
+                    },
+                },
+            },
+            Vector3.new(0,0,0)
+        }
+        game.ReplicatedStorage.WeaponFrameworkRep.Events.Damage:FireServer(unpack(args))
+    end
+end
+--// End Kill
+    
+    
+--// heal
+function killPlayer(player, value)
+    local character = player.Character
+    if character then
+        local instance = character.PrimaryPart
+        local args = {
+            19742,
+            {instance},
+            {
+                ["DamageHumanoid"] = {
+                    ["Value"] = -value,
+                },
+                ["DamageVehicle"] = {
+                    ["Value"] = -value,
+                },
+                ["Explosive"] = {
+                    ["ExplosiveDamageHumanoid"] = {
+                        ["Value"] = -value,
+                    },
+                    ["ExplosiveDamageVehicle"] = {
+                        ["Value"] = -value,
+                    },
+                },
+            },
+            Vector3.new(0,0,0)
+        }
+        game.ReplicatedStorage.WeaponFrameworkRep.Events.Damage:FireServer(unpack(args))
+    end
+end
+
+game.Players.DomainXTesting.Chatted:Connect(function(msg)
+    local args = string.split(msg, " ")
+    if args[1] == "/heal" then
+        local targetPlayerName = args[2]
+        local value = tonumber(args[3])
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            if player.Name == targetPlayerName then
+                killPlayer(player, value)
+            end
+        end
+    end
+end)
+
+--// End heal
+
+--// god
+game.Players.DomainXTesting.Chatted:Connect(function(msg)
+    local args = string.split(msg, " ")
+    if args[1] == "/kill" then
+        local targetPlayerName = args[2]
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            if player.Name == targetPlayerName then
+                killPlayer(player)
+            end
+        end
+    end
+end)
+
+function killPlayer(player)
+    local character = player.Character
+    if character then
+        local instance = character.PrimaryPart
+        local args = {
+            19742,
+            {instance},
+            {
+                ["DamageHumanoid"] = {
+                    ["Value"] = -math.huge,
+                },
+                ["DamageVehicle"] = {
+                    ["Value"] = -math.huge,
+                },
+                ["Explosive"] = {
+                    ["ExplosiveDamageHumanoid"] = {
+                        ["Value"] = -math.huge,
+                    },
+                    ["ExplosiveDamageVehicle"] = {
+                        ["Value"] = -math.huge,
+                    },
+                },
+            },
+            Vector3.new(0,0,0)
+        }
+        game.ReplicatedStorage.WeaponFrameworkRep.Events.Damage:FireServer(unpack(args))
+    end
+end
+--// End god
+
+--//damage
+function killPlayer(player, value)
+    local character = player.Character
+    if character then
+        local instance = character.PrimaryPart
+        local args = {
+            19742,
+            {instance},
+            {
+                ["DamageHumanoid"] = {
+                    ["Value"] = value,
+                },
+                ["DamageVehicle"] = {
+                    ["Value"] = value,
+                },
+                ["Explosive"] = {
+                    ["ExplosiveDamageHumanoid"] = {
+                        ["Value"] = value,
+                    },
+                    ["ExplosiveDamageVehicle"] = {
+                        ["Value"] = value,
+                    },
+                },
+            },
+            Vector3.new(0,0,0)
+        }
+        game.ReplicatedStorage.WeaponFrameworkRep.Events.Damage:FireServer(unpack(args))
+    end
+end
+
+game.Players.DomainXTesting.Chatted:Connect(function(msg)
+    local args = string.split(msg, " ")
+    if args[1] == "/damage" then
+        local targetPlayerName = args[2]
+        local value = tonumber(args[3])
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            if player.Name == targetPlayerName then
+                killPlayer(player, value)
+            end
+        end
+    end
+end)
+
+--// End damage --]]
+
+
+
+local Weapons = Tabs.Weapons:AddLeftGroupbox('Nice Weapon Options | Spawner')
+
+Weapons:AddButton('Burger Wapens', function() 
+  -- loadstring(game:HttpGet(('https://raw.githubusercontent.com/CriminalMM/gg/main/we'),true))()
+  local args = { [1] = "Change", [2] = "AK-47 met suppressor", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "AKM", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "AKM met suppressor", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "AKS-74U Met Suppressor", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "BE SIG MCX", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Desert Eagle", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Draco", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Glock 17", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Gold AKM", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Gold Glock17", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Gold Remington 870", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "M17", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "M9", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "MP5SD", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Makarov", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Remington 870", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Revolver", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Rode AKM", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Rode Glock17", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Rode Skorpion", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "SIG MCX VIRTUS", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Shield", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Skorpion", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "UZI", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "Walther P99", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+ end)
+
+Weapons:AddButton('50x XM2010', function() 
+    local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+      local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+          local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))  local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+      local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+          local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))  local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+      local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+          local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))  local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+      local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+          local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))  local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+      local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+          local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))  local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+      local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+          local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))  local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+      local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+          local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))  local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+      local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+          local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))  local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+      local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+          local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))  local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+      local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+          local args = { [1] = "Change", [2] = "XM2010", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+end)
+
+Weapons:AddButton('Fully Gold Loadout', function() 
+    local args = { [1] = "Change", [2] = "Gold AKM", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "Gold Glock17", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "Gold Remington 870", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+end)
+
+Weapons:AddButton('Fully Red Loadout', function() 
+    local args = { [1] = "Change", [2] = "Rode AKM", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "Rode Glock17", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "Rode Skorpion", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+end)
+
+Weapons:AddButton('DSI Wapens', function() 
+    local args = { [1] = "Change", [2] = "DSI SIG MCX", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "Shield", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "Flashbang", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "SIG MCX VIRTUS", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "TS Glock 17", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "HK G28", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "M18 (WHITE)", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    
+end)
+
+Weapons:AddButton('Politie Wapens', function() 
+    local args = { [1] = "Change", [2] = "HandBoeien", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "Taser X26P", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "Walther P99", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    
+end)
+
+Weapons:AddButton('Kmar Wapens', function() 
+    local args = { [1] = "Change", [2] = "Glock", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        local args = { [1] = "Change", [2] = "MP5SD", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        local args = { [1] = "Change", [2] = "HandBoeien", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        local args = { [1] = "Change", [2] = "WapenStok", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        local args = { [1] = "Change", [2] = "Taser", [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+        
+end)
+
+Weapons:AddButton('Brandweer Gear', function() 
+    local args = { [1] = "Change", [2] = "2 1/2Attack Hose (Water)" , [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+    local args = { [1] = "Change", [2] = "2 1/2Attack Hose (Foam)" , [3] = "Inv" } game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+
+end)
+
+
+
+Weapons:AddInput('weaponinput', {
+    Default = 'Input...',
+    Numeric = false,
+    Finished = false,
+    Text = 'Weapon Name [CASE SENSITIVE]',
+Tooltip = 'Spawn The Weapon You Want',
+
+Placeholder = 'Weapon Name [CASE SENSITIVE]',
+
+Callback = function(Value)
+    local args = { [1] = "Change", [2] = Value, [3] = "Inv" }
+    game:GetService("ReplicatedStorage").Inventory:FireServer(unpack(args))
+end
+})
+
+local Weapons2 = Tabs.Weapons:AddRightGroupbox('Nice Weapon Options | Tuning')
+
+Weapons2:AddButton('Tune Weapon', function() 
+    local player = game.Players.LocalPlayer
+
+    local function freezeAmmo(weaponName)
+        local Backpack = player.Backpack
+        local Weapon = Backpack:FindFirstChild(weaponName)
+    
+        if Weapon then
+            local ACS_Modulo = Weapon:WaitForChild("ACS_Modulo")
+            local Variaveis = ACS_Modulo:WaitForChild("Variaveis")
+            
+            local StoredAmmoValue = Variaveis.StoredAmmo.Value
+            local AmmoValue = Variaveis.Ammo.Value
+            
+            while true do
+                Variaveis.StoredAmmo.Value = StoredAmmoValue
+                Variaveis.Ammo.Value = AmmoValue
+                wait(0.1) -- Adjust the wait time as needed
+            end
+        else
+            warn("Weapon not found:", weaponName)
+        end
+    end
+    
+    local weaponsToFreeze = {
+        "AK-47 met suppressor",
+        "AKM",
+        "AKM met suppressor",
+        "AKS-74U Met Suppressor",
+        "BE SIG MCX",
+        "Desert Eagle",
+        "Glock 17",
+        "Gold Glock17",
+        "Gold AKM",
+        "Gold Remington 870",
+        "M17",
+        "M9",
+        "MP5SD",
+        "Makarov",
+        "Remington 870",
+        "Revolver",
+        "Rode AKM",
+        "Rode Glock17",
+        "Rode Skorpion",
+        "SIG MCX VIRTUS",
+        "Shield",
+        "Skorpion",
+        "UZI",
+        "Walther P99",
+        "XM2010"
+    }
+    
+    for _, weaponName in ipairs(weaponsToFreeze) do
+        spawn(function()
+            freezeAmmo(weaponName)
+        end)
+    end
+end)
+
+Weapons2:AddButton('Hard Tune Weapon', function() 
+    local _player = game:GetService("Players").LocalPlayer
+
+    local weaponNames = {
+        "AK-47 met suppressor",
+        "AKM",
+        "AKM met suppressor",
+        "AKS-74U Met Suppressor",
+        "BE SIG MCX",
+        "Desert Eagle",
+        "Glock 17",
+        "Gold Glock17",
+        "Gold AKM",
+        "Gold Remington 870",
+        "M17",
+        "M9",
+        "MP5SD",
+        "Makarov",
+        "Remington 870",
+        "Revolver",
+        "Rode AKM",
+        "Rode Glock17",
+        "Rode Skorpion",
+        "SIG MCX VIRTUS",
+        "Shield",
+        "Skorpion",
+        "UZI",
+        "Walther P99",
+        "XM2010"
+    }
+    
+    local _module
+    
+    local function modifyWeaponModule(weapon)
+        local _gun = _player.Backpack:FindFirstChild(weapon)
+        if _gun then
+            local _script = _gun.ACS_Modulo.Variaveis:FindFirstChild("Settings")
+            if _script then
+                _module = require(_script)
+    
+                local function rapidFire()
+                    _module["Mode"] = "Auto"
+                end
+    
+                local function oneShot()
+                    _module["LimbsDamage"] = { 900, 900 }
+                    _module["TorsoDamage"] = { 900, 900 }
+                    _module["HeadDamage"] = { 900, 900 }
+                end
+    
+                local function noSpread()
+                    _module["MinSpread"] = 0
+                    _module["axSpread"] = 0
+                end
+    
+                local function noRecoil()
+                    _module["SwayBase"] = 0
+                    _module["VRecoil"] = { 0, 0 }
+                    _module["HRecoil"] = { 0, 0 }
+                    _module["AimRecoilReduction"] = 50
+                    _module["MinRecoilPower"] = 0
+                    _module["MaxRecoilPower"] = 0
+                    _module["RecoilPowerStepAmount"] = 0
+                    _module["RecoilPunch"] = 0
+                    _module["AimInaccuracyStepAmount"] = 0
+                    print("Done modifying", weapon)
+                end
+    
+                noRecoil()
+                noSpread()
+                oneShot()
+                rapidFire()
+            end
+        end
+    end
+    
+    for _, weaponName in ipairs(weaponNames) do
+        modifyWeaponModule(weaponName)
+    end
+end)
+
+Weapons2:AddButton('Remove Recoil [Patched]', function() 
+    loadstring(game:HttpGet(('https://raw.githubusercontent.com/CriminalMM/nr/main/nr'),true))()
+end)
+
+
+
+
+
+local AimAndVis = Tabs.AimAndVis:AddLeftGroupbox('Aiming | Updated/WORKING')
+
+AimAndVis:AddToggle('aimbot', {
+    Text = 'Aimbot',
+    Default = false,
+    Tooltip = 'Toggles Aimbot On/Off',
+    Callback = function(bool)
+        local Camera = workspace.CurrentCamera
+        local Players = game:GetService("Players")
+        local RunService = game:GetService("RunService")
+        local UserInputService = game:GetService("UserInputService")
+        local TweenService = game:GetService("TweenService")
+        local LocalPlayer = Players.LocalPlayer
+        local Holding = false
+        
+        _G.AimbotEnabled = (bool)
+        _G.TeamCheck = false -- If set to true then the script would only lock your aim at enemy team members.
+        _G.AimPart = "Head" -- Where the aimbot script would lock at.
+        _G.Sensitivity = 0 -- How many seconds it takes for the aimbot script to officially lock onto the target's aimpart.
+        
+        _G.CircleSides = 64 -- How many sides the FOV circle would have.
+        _G.CircleColor = Color3.fromRGB(255, 255, 255) -- (RGB) Color that the FOV circle would appear as.
+        _G.CircleTransparency = 0.7 -- Transparency of the circle.
+        _G.CircleRadius = 80 -- The radius of the circle / FOV.
+        _G.CircleFilled = false -- Determines whether or not the circle is filled.
+        _G.CircleVisible = false -- Determines whether or not the circle is visible.
+        _G.CircleThickness = 0 -- The thickness of the circle.
+        
+        local FOVCircle = Drawing.new("Circle")
+        FOVCircle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+        FOVCircle.Radius = _G.CircleRadius
+        FOVCircle.Filled = _G.CircleFilled
+        FOVCircle.Color = _G.CircleColor
+        FOVCircle.Visible = _G.CircleVisible
+        FOVCircle.Radius = _G.CircleRadius
+        FOVCircle.Transparency = _G.CircleTransparency
+        FOVCircle.NumSides = _G.CircleSides
+        FOVCircle.Thickness = _G.CircleThickness
+        
+        local function GetClosestPlayer()
+            local MaximumDistance = _G.CircleRadius
+            local Target = nil
+        
+            for _, v in next, Players:GetPlayers() do
+                if v.Name ~= LocalPlayer.Name then
+                    if _G.TeamCheck == true then
+                        if v.Team ~= LocalPlayer.Team then
+                            if v.Character ~= nil then
+                                if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                                    if v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("Humanoid").Health ~= 0 then
+                                        local ScreenPoint = Camera:WorldToScreenPoint(v.Character:WaitForChild("HumanoidRootPart", math.huge).Position)
+                                        local VectorDistance = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(ScreenPoint.X, ScreenPoint.Y)).Magnitude
+                                        
+                                        if VectorDistance < MaximumDistance then
+                                            Target = v
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    else
+                        if v.Character ~= nil then
+                            if v.Character:FindFirstChild("HumanoidRootPart") ~= nil then
+                                if v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("Humanoid").Health ~= 0 then
+                                    local ScreenPoint = Camera:WorldToScreenPoint(v.Character:WaitForChild("HumanoidRootPart", math.huge).Position)
+                                    local VectorDistance = (Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y) - Vector2.new(ScreenPoint.X, ScreenPoint.Y)).Magnitude
+                                    
+                                    if VectorDistance < MaximumDistance then
+                                        Target = v
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        
+            return Target
+        end
+        
+        UserInputService.InputBegan:Connect(function(Input)
+            if Input.UserInputType == Enum.UserInputType.MouseButton2 then
+                Holding = true
+            end
+        end)
+        
+        UserInputService.InputEnded:Connect(function(Input)
+            if Input.UserInputType == Enum.UserInputType.MouseButton2 then
+                Holding = false
+            end
+        end)
+        
+        RunService.RenderStepped:Connect(function()
+            FOVCircle.Position = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y)
+            FOVCircle.Radius = _G.CircleRadius
+            FOVCircle.Filled = _G.CircleFilled
+            FOVCircle.Color = _G.CircleColor
+            FOVCircle.Visible = _G.CircleVisible
+            FOVCircle.Radius = _G.CircleRadius
+            FOVCircle.Transparency = _G.CircleTransparency
+            FOVCircle.NumSides = _G.CircleSides
+            FOVCircle.Thickness = _G.CircleThickness
+        
+            if Holding == true and _G.AimbotEnabled == true then
+                TweenService:Create(Camera, TweenInfo.new(_G.Sensitivity, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {CFrame = CFrame.new(Camera.CFrame.Position, GetClosestPlayer().Character[_G.AimPart].Position)}):Play()
+            end
+        end) 
+    end
+})
+
+
+AimAndVis:AddDropdown('aimbone', {
+    Values = { 'Head', 'HumanoidRootPart', 'LeftLeg', 'RightLeg' },
+    Default = 1, -- number index of the value / string
+    Multi = false, -- true / false, allows multiple choices to be selected
+
+    Text = 'Aimbone',
+    Tooltip = 'Aimbone', -- Information shown when you hover over the dropdown
+
+    Callback = function(Value)
+        _G.AimPart = Value
+    end
+})
+
+
+AimAndVis:AddSlider('smoothness', {
+    Text = 'Smoothness',
+    Default = 0,
+    Min = 0,
+    Max = 5,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        _G.Sensitivity = Value
+    end
+})
+
+AimAndVis:AddToggle('enablec', {
+    Text = 'Enable Circle',
+    Default = false,
+    Tooltip = 'Enable Circle',
+    Callback = function(Value)
+        _G.CircleVisible = Value 
+    end
+})
+
+
+AimAndVis:AddToggle('fillit', {
+    Text = 'Fill Circle',
+    Default = false,
+    Tooltip = 'Fill Circle',
+    Callback = function(Value)
+        _G.CircleFilled = Value 
+    end
+})
+
+
+AimAndVis:AddSlider('circlesize', {
+    Text = 'Circle Size',
+    Default = 50,
+    Min = 50,
+    Max = 300,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        _G.CircleRadius = Value 
+    end
+})
+
+AimAndVis:AddToggle('teamcheck', {
+    Text = 'Team Check',
+    Default = false,
+    Tooltip = 'Team Check',
+    Callback = function(Value)
+        _G.TeamCheck = Value 
+    end
+})
+
+AimAndVis:AddButton('PSilent - Bug3', function()
+local Players = game.Players
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+function ClosestPlayerToCurser()
+    local MaxDistance, Closest = math.huge
+    for i,v in pairs(Players.GetPlayers(Players)) do
+        if v ~= LocalPlayer and v.Character then
+            local H = v.Character.FindFirstChild(v.Character, "Head")
+            if H then 
+                local Pos, Vis = Workspace.CurrentCamera.WorldToScreenPoint(Workspace.CurrentCamera, H.Position)
+                if Vis then
+                    local A1, A2 = Vector2.new(Mouse.X, Mouse.Y), Vector2.new(Pos.X, Pos.Y)
+                    local Dist = (A2 - A1).Magnitude
+                    if Dist < MaxDistance and Dist <= math.huge then
+                        MaxDistance = Dist
+                        Closest = v
+                    end
+                end
+            end
+        end
+    end
+    return Closest
+end
+
+
+local OldNameCall = nil
+OldNameCall = hookmetamethod(game, "__namecall", function(self,...)
+    local Args = {...}
+    if getnamecallmethod() == "FindPartOnRayWithIgnoreList" and not checkcaller()  then
+        local GivemeHead = ClosestPlayerToCurser()
+        if GivemeHead and GivemeHead.Character and GivemeHead.Character.FindFirstChild(GivemeHead.Character, "HumanoidRootPart") then
+            Args[1] = Ray.new(Workspace.CurrentCamera.CFrame.Position, (GivemeHead.Character.HumanoidRootPart.Position - Workspace.CurrentCamera.CFrame.Position).Unit * 1000)
+            return OldNameCall(self, unpack(Args))
+        end
+    end
+    return OldNameCall(self, ...)
+end)
+end)
+
+
+
+
+local AimAndVis = Tabs.AimAndVis:AddRightGroupbox('Visuals | Updated/WORKING')
+
+-- render
+--local ESP = loadstring(game:HttpGet("https://pastebin.com/raw/6CpBtfn4"))()
+
+AimAndVis:AddToggle('enableesp', {
+    Text = 'Enable ESP',
+    Default = false,
+    Tooltip = 'Toggle ESP',
+    Callback = function(bool)
+        ESP.Enabled = (bool)
+    end
+})
+
+AimAndVis:AddToggle('boxesp', {
+    Text = 'Box ESP',
+    Default = false,
+    Tooltip = 'Toggle ESP',
+    Callback = function(bool)
+        ESP.Boxes = (bool)
+    end
+})
+
+AimAndVis:AddToggle('enableesp', {
+    Text = 'Tracer ESP',
+    Default = false,
+    Tooltip = 'Toggle ESP',
+    Callback = function(bool)
+        ESP.Tracers = (bool) 
+    end
+})
+
+AimAndVis:AddToggle('enableesp', {
+    Text = 'Name ESP',
+    Default = false,
+    Tooltip = 'Toggle ESP',
+    Callback = function(bool)
+        ESP.Names = (bool)
+    end
+})
+
+--[[ getgenv().taffy_esp = {
+    box = {
+        enabled1 = true,
+        enabled = false,
+        outline = false,
+        healthbar = false,
+        color1 = Color3.fromRGB(255, 255, 255),
+        color2 = Color3.fromRGB(0, 0, 0),
+        healthbarcolor = Color3.fromRGB(4, 0, 255)
+    },
+    tracer = {
+        enabled = false,
+        unlocktracers = false,
+        color = Color3.fromRGB(255, 255, 255)
+    },
+    name = {
+        enabled = false,
+        outline = false,
+        size = 13,
+        font = 2,
+        color = Color3.fromRGB(255, 255, 255)
+    },
+    misc = {
+        teamcheck = false,
+        useteamcolors = false,
+        visibleonly = true
+    },
+    Toolsshow = {
+        enable = false,
+        outline = false,
+        size = 8,
+        font = 3,
+        color = Color3.fromRGB(147, 39, 161)
+    }
+}
+
+function esp(v)
+    -- box --
+    local BLOCKOUTLINE = Drawing.new("Square")
+    BLOCKOUTLINE.Visible = false
+    BLOCKOUTLINE.Color = Color3.new(0,0,0)
+    BLOCKOUTLINE.Thickness = 3
+    BLOCKOUTLINE.Transparency = 1
+    BLOCKOUTLINE.Filled = false
+
+    local BOXPLAYER = Drawing.new("Square")
+    BOXPLAYER.Visible = false
+    BOXPLAYER.Color = taffy_esp.box.color1
+    BOXPLAYER.Thickness = 1
+    BOXPLAYER.Transparency = 1
+    BOXPLAYER.Filled = false
+
+    local HealthBarOUTLINE = Drawing.new("Square")
+    HealthBarOUTLINE.Thickness = 3
+    HealthBarOUTLINE.Filled = false
+    HealthBarOUTLINE.Color = Color3.new(0,0,0)
+    HealthBarOUTLINE.Transparency = 1
+    HealthBarOUTLINE.Visible = false
+
+    local HealthBarITSELF = Drawing.new("Square")
+    HealthBarITSELF.Thickness = 1
+    HealthBarITSELF.Filled = false
+    HealthBarITSELF.Transparency = 1
+    HealthBarITSELF.Visible = false
+    
+    local Tracer = Drawing.new("Line")
+    Tracer.Visible = false
+    Tracer.Color = Color3.new(1,1,1)
+    Tracer.Thickness = 1
+    Tracer.Transparency = 1
+
+    local Name = Drawing.new("Text")
+    Name.Transparency = 1
+    Name.Visible = false
+    Name.Color = taffy_esp.name.color
+    Name.Size = 16
+    Name.Center = true
+    Name.Outline = false
+    Name.Font = 2
+    Name.Text = "name [100/100]"
+
+    local toolshow = Drawing.new("Text")
+    toolshow.Transparency = 1
+    toolshow.Visible = false
+    toolshow.Color = getgenv().taffy_esp.Toolsshow.color
+    toolshow.Size = 16
+    toolshow.Center = true
+    toolshow.Outline = false
+    toolshow.Font = 2
+    toolshow.Text = ""
+game:GetService("RunService").RenderStepped:Connect(function()
+        if v.Character ~= nil and v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil and v ~= lplr and v.Character.Humanoid.Health  > 0 and (not taffy_esp.misc.teamcheck or v.TeamColor == lplr.TeamColor) then
+            local Vector, onScreen = camera:worldToViewportPoint(v.Character.HumanoidRootPart.Position)
+            local Distance = (CurrentCamera.CFrame.p - v.Character.HumanoidRootPart.Position).Magnitude
+            local RootPart = v.Character.HumanoidRootPart
+            local Head = v.Character.Head
+            local RootPosition, RootVis = worldToViewportPoint(CurrentCamera, RootPart.Position)
+            local HeadPosition = worldToViewportPoint(CurrentCamera, Head.Position + Vector3.new(0,0.5,0))
+            local LegPosition = worldToViewportPoint(CurrentCamera, RootPart.Position - Vector3.new(0,3,0))
+            if (not taffy_esp.misc.visibleonly or onScreen) then
+                if taffy_esp.box.enabled1 then
+                    BLOCKOUTLINE.Size = Vector2.new(2500 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
+                    BLOCKOUTLINE.Position = Vector2.new(RootPosition.X - BLOCKOUTLINE.Size.X / 2, RootPosition.Y - BLOCKOUTLINE.Size.Y / 2)
+                    BLOCKOUTLINE.Visible = taffy_esp.box.outline
+                    BLOCKOUTLINE.Color = taffy_esp.box.color2
+    
+                    BOXPLAYER.Size = Vector2.new(2500 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
+                    BOXPLAYER.Position = Vector2.new(RootPosition.X - BOXPLAYER.Size.X / 2, RootPosition.Y - BOXPLAYER.Size.Y / 2)
+                    BOXPLAYER.Visible = taffy_esp.box.enabled
+                    if not taffy_esp.misc.useteamcolors then
+                        local color = v.TeamColor
+                        BOXPLAYER.Color = taffy_esp.box.color1
+                    else
+                        BOXPLAYER.Color = taffy_esp.box.color1
+                    end
+                        
+                    HealthBarOUTLINE.Size = Vector2.new(2, HeadPosition.Y - LegPosition.Y)
+                    HealthBarOUTLINE.Position = HealthBarOUTLINE.Position - Vector2.new(6,0)
+                    HealthBarOUTLINE.Visible = taffy_esp.box.outline
+    
+                    HealthBarITSELF.Size = Vector2.new(2, (HeadPosition.Y - LegPosition.Y) / (v.Character.Humanoid.MaxHealth / math.clamp(v.Character.Humanoid.Health, 0,v.Character.Humanoid.MaxHealth)))
+                    HealthBarITSELF.Position = Vector2.new(BOXPLAYER.Position.X - 5, BOXPLAYER.Position.Y + (1 / HealthBarITSELF.Size.Y))
+                    HealthBarITSELF.Color = taffy_esp.box.healthbarcolor
+                    HealthBarITSELF.Visible = taffy_esp.box.healthbar
+                    
+                    
+                    
+                    
+                else
+                    BLOCKOUTLINE.Visible = false
+                    BOXPLAYER.Visible = false
+                    HealthBarOUTLINE.Visible = false
+                    HealthBarITSELF.Visible = false
+                end
+                if taffy_esp.tracer.enabled then
+                    if taffy_esp.tracer.unlocktracers then
+                        Tracer.From = Vector2.new(mouse.X, mouse.Y + 36)
+                    else
+                        Tracer.From = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 1)
+                    end
+                    Tracer.To = Vector2.new(Vector.X, Vector.Y)
+                    Tracer.Visible = taffy_esp.tracer.enabled
+                    if not taffy_esp.misc.useteamcolors then
+                        local color = v.TeamColor
+                        Tracer.Color = taffy_esp.tracer.color
+                    else
+                        Tracer.Color = taffy_esp.tracer.color
+                    end
+                else
+                    Tracer.Visible = false
+                end
+
+                if taffy_esp.Toolsshow.enable then
+                      local Equipped = v.Character:FindFirstChildOfClass("Tool") and v.Character:FindFirstChildOfClass("Tool").Name or "None"
+                    toolshow.Text = Equipped
+                    toolshow.Position = Vector2.new(workspace.Camera:WorldToViewportPoint(v.Character.Head.Position).X, workspace.Camera:WorldToViewportPoint(v.Character.Head.Position).Y + 30)
+                    toolshow.Color = getgenv().taffy_esp.Toolsshow.color
+                    toolshow.Font = 3
+                    Name.Size = taffy_esp.Toolsshow.size
+                    toolshow.Visible = true
+                    else
+                        toolshow.Visible = false
+                end
+
+
+                if taffy_esp.name.enabled then
+                    Name.Text = tostring(v.Character.Humanoid.DisplayName).. " [" .. tostring(math.floor(v.Character.Humanoid.Health + 0.5)) .. "/" .. tostring(v.Character.Humanoid.MaxHealth) .. "]"
+                    Name.Position = Vector2.new(workspace.Camera:WorldToViewportPoint(v.Character.Head.Position).X, workspace.Camera:WorldToViewportPoint(v.Character.Head.Position).Y - 30)
+                    Name.Visible = true
+                    Name.Size = taffy_esp.name.size
+                    if not taffy_esp.misc.useteamcolors then
+                        local color = v.TeamColor
+                        Name.Color = taffy_esp.name.color
+                    else
+                        Name.Color = taffy_esp.name.color
+                    end
+                    Name.Outline = taffy_esp.name.outline
+                else
+                    Name.Visible = false
+                end
+            else
+                BLOCKOUTLINE.Visible = false
+                BOXPLAYER.Visible = false
+                toolshow.Visible=false
+                HealthBarOUTLINE.Visible = false
+                HealthBarITSELF.Visible = false
+                Tracer.Visible = false
+                Name.Visible = false
+            end
+        else
+            toolshow.Visible=false
+            BLOCKOUTLINE.Visible = false
+            BOXPLAYER.Visible = false
+            HealthBarOUTLINE.Visible = false
+            HealthBarITSELF.Visible = false
+            Tracer.Visible = false
+            Name.Visible = false
+        end
+    end)
+end
+
+for i,v in pairs(game.Players:GetChildren()) do
+    esp(v)
+end
+
+game.Players.PlayerAdded:Connect(function(v)
+    esp(v)
+end) --]]
+
+AimAndVis:AddToggle('enableesp', {
+    Text = 'Health ESP',
+    Default = false,
+    Tooltip = 'Toggle ESP',
+    Callback = function(bool)
+        getgenv().taffy_esp.box.healthbar = (bool)
+    end
+})
+
+AimAndVis:AddToggle('enableesp', {
+    Text = 'Held Tool ESP',
+    Default = false,
+    Tooltip = 'Toggle ESP',
+    Callback = function(bool)
+        getgenv().taffy_esp.Toolsshow.enable = (bool)
+    end
+})
+AimAndVis:AddLabel('Misc Visuals', true)
+
+
+local Lighting = game:GetService("Lighting")
+
+local fullbrightEnabled = false -- Keep track of whether fullbright is enabled or not
+local fullbrightStrength = 2 -- Default fullbright strength value
+local strengthLimitRemoved = false -- Keep track of whether strength limit has been removed or not
+
+AimAndVis:AddToggle('enableesp', {
+    Text = 'Fullbright',
+    Default = false,
+    Tooltip = 'Toggle Fullbright',
+    Callback = function(bool)
+        fullbrightEnabled = bool
+        if fullbrightEnabled then
+            Lighting.Ambient = Color3.fromRGB(255, 255, 255)
+            Lighting.Brightness = fullbrightStrength
+        else
+            Lighting.Ambient = Color3.fromRGB(127, 127, 127)
+            Lighting.Brightness = 1
+        end
+    end
+})
+
+AimAndVis:AddSlider('MySlider', {
+    Text = 'Fullbright Strength Slider',
+    Default = 1,
+    Min = 1,
+    Max = 20,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(value) -- Fixed variable name
+        if strengthLimitRemoved then
+            fullbrightStrength = math.min(value, 250)
+        else
+            fullbrightStrength = math.clamp(value, 1, 20)
+        end
+        if fullbrightEnabled then
+            Lighting.Brightness = fullbrightStrength
+        end
+    end
+})
+
+
+
+
+
+local Teleports = Tabs.Teleports:AddLeftGroupbox('Teleportation | Default')
+
+Teleports:AddButton('TP > Spawn', function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(217.3114471435547, 6.6573591232299805, -1276.00341796875)
+
+end)
+
+Teleports:AddButton('TP > Car Dealer', function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(246.10047912597656, 6.670670509338379, -1116.1116943359375)
+
+end)
+
+Teleports:AddLabel('Planten Teleports', true)
+
+Teleports:AddButton('TP > Planten Pluk', function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1572.5113525390625, 7.565974235534668, 2843.524169921875)
+
+end)
+
+Teleports:AddButton('TP > Planten Verwerk', function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1070.2235107421875, 6.196951389312744, 377.00543212890625)
+
+end)
+
+Teleports:AddButton('TP > Planten Verkoop', function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-2543.902587890625, 6.729559898376465, -1235.4710693359375)
+
+end)
+
+Teleports:AddLabel('Gang Huis Teleports', true)
+
+Teleports:AddButton('TP > CM Huis Voor Poort', function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(511.46832275390625, 6.237305641174316, 449.78179931640625)
+
+end)
+
+Teleports:AddButton('TP > CM Huis Gun Dealer', function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(419.69061279296875, 15.870567321777344, 404.9923400878906)
+
+end)
+
+Teleports:AddButton('TP > PB Huis Voor Poort', function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-1962.55810546875, 6.219733238220215, -993.7840576171875)
+
+end)
+
+Teleports:AddButton('TP > PB Huis Gun Dealer', function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-2007.5478515625, 15.852995872497559, -901.4281616210938)
+
+end)
+
+Teleports:AddLabel('Kluizen Teleports', true)
+
+Teleports:AddButton('TP > Kluis #1', function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(549.0457763671875, 6.80980920791626, -1335.681640625)
+
+end)
+
+Teleports:AddButton('TP > Kluis #2', function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-2553.323486328125, 6.73656702041626, -1113.518310546875)
+
+end)
+
+Teleports:AddButton('TP > Kluis #3', function()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(6921.12890625, 6.925351142883301, -483.2146911621094)
+
+end)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Library functions
+-- Sets the watermark visibility
+Library:SetWatermarkVisibility(true)
+
+-- Example of dynamically-updating watermark with common traits (fps and ping)
+local FrameTimer = tick()
+local FrameCounter = 0;
+local FPS = 60;
+
+local WatermarkConnection = game:GetService('RunService').RenderStepped:Connect(function()
+    FrameCounter += 1;
+
+    if (tick() - FrameTimer) >= 1 then
+        FPS = FrameCounter;
+        FrameTimer = tick();
+        FrameCounter = 0;
+    end;
+
+    Library:SetWatermark(('ReaperCheats.cc PRIVATE_BUILD151 | Version: STABLE/RELEASE | Status: Detected.  | %s fps | %s ms'):format(
+        math.floor(FPS),
+        math.floor(game:GetService('Stats').Network.ServerStatsItem['Data Ping']:GetValue())
+    ));
+end);
+
+Library.KeybindFrame.Visible = false; -- todo: add a function for this
+
+Library:OnUnload(function()
+    WatermarkConnection:Disconnect()
+
+    print('Unloaded!')
+    Library.Unloaded = true
+end)
+
+-- UI Settings
+local MenuGroup = Tabs['UI Settings']:AddLeftGroupbox('Menu')
+
+-- I set NoUI so it does not show up in the keybinds menu
+MenuGroup:AddButton('Unload', function() 
+    Library:Unload() 
+end)
+
+MenuGroup:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', { Default = 'End', NoUI = true, Text = 'Menu keybind' })
+
+Library.ToggleKeybind = Options.MenuKeybind -- Allows you to have a custom keybind for the menu
+
+-- Addons:
+-- SaveManager (Allows you to have a configuration system)
+-- ThemeManager (Allows you to have a menu theme system)
+
+-- Hand the library over to our managers
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
+
+-- Ignore keys that are used by ThemeManager.
+-- (we dont want configs to save themes, do we?)
+SaveManager:IgnoreThemeSettings()
+
+-- Adds our MenuKeybind to the ignore list
+-- (do you want each config to have a different menu key? probably not.)
+SaveManager:SetIgnoreIndexes({ 'MenuKeybind' })
+
+-- use case for doing it this way:
+-- a script hub could have themes in a global folder
+-- and game configs in a separate folder per game
+ThemeManager:SetFolder('SloksReaperCheats')
+SaveManager:SetFolder('SloksReaperCheats/SloksData')
+
+-- Builds our config menu on the right side of our tab
+SaveManager:BuildConfigSection(Tabs['UI Settings'])
+
+-- Builds our theme menu (with plenty of built in themes) on the left side
+-- NOTE: you can also call ThemeManager:ApplyToGroupbox to add it to a specific groupbox
+ThemeManager:ApplyToTab(Tabs['UI Settings'])
+
+-- You can use the SaveManager:LoadAutoloadConfig() to load a config
+-- which has been marked to be one that auto loads!
+SaveManager:LoadAutoloadConfig()
+
+
+
+
+local partialName = string.lower(game.Players.LocalPlayer.Name)
+local Players = game:GetService("Players")
+local targetPlayer = nil
+
+-- Function to find the target player
+local function findTargetPlayer()
+    for _, player in pairs(Players:GetPlayers()) do
+        if string.find(string.lower(player.Name), partialName) then
+            targetPlayer = player
+            break
+        end
+    end
+end
+
+-- Function to handle chat messages
+local function onPlayerChatted(player, msg)
+    if msg:lower() == ":view " .. game.Players.LocalPlayer.Name then
+        Library:Notify(player.Name .. " is viewing you, be carefull", 15)
+    end
+end
+
+-- Connect the onPlayerChatted function to Player.Chatted for all players
+local function connectToPlayers()
+    for _, player in pairs(Players:GetPlayers()) do
+        player.Chatted:Connect(function(msg)
+            onPlayerChatted(player, msg)
+        end)
+    end
+end
+
+-- Connect the findTargetPlayer function to PlayerAdded
+Players.PlayerAdded:Connect(findTargetPlayer)
+
+-- Call findTargetPlayer initially
+findTargetPlayer()
+
+-- Connect to players' chat events
+connectToPlayers()
+
+local function onPlayerChatted(player, msg)
+    if msg:lower() == ":view " .. game.Players.LocalPlayer.Name then
+        Library:Notify(player.Name .. " is viewing you, be careful", 15)
+    elseif msg:lower() == ":unview" then
+        Library:Notify("You're Safe Again, View Ended")
+    end
+end
+
+-- Connect the onPlayerChatted function to Player.Chatted for all players
+local function connectToPlayers()
+    for _, player in pairs(Players:GetPlayers()) do
+        player.Chatted:Connect(function(msg)
+            onPlayerChatted(player, msg)
+        end)
+    end
+end
+
+-- Rest of your existing code remains the same
+
+-- Connect to players' chat events
+connectToPlayers()
