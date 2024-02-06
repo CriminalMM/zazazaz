@@ -1,0 +1,1520 @@
+--[[ 
+------------------------------------------------------------------------------------------
+TESTED GAMES:
+Grand Street
+Street Shootout Alpha
+Street Vendetta Gun
+Realistic Hood Testing Game
+Realistic Hood Gun Test
+BIG Paintball
+Krush PVP
+FiveDuels (NICE WORKING)
+Rocket PVP
+Arsenal
+Fortblox (Fortnite)
+Foblox (Fortnite)
+Island Royale
+Pistol 1v1
+Chicago Remastered
+Chicago Shootout
+No-Scope Arcade
+D-Day
+------------------------------------------------------------------------------------------
+--]]
+loadstring(game:HttpGet("https://raw.githubusercontent.com/IceMinisterq/Misc-Script/main/adonis%20ac%20bypass.lua"))()
+if not game:IsLoaded() then game.Loaded:Wait() end
+
+local lPlayer = game.Players.LocalPlayer
+-- thanks 3ds and kiko metatables r hard
+if not getgenv().MTAPIMutex then loadstring(game:HttpGet("https://raw.githubusercontent.com/KikoTheDon/MT-Api-v2/main/__source/mt-api%20v2.lua", true))() end
+
+if game.PlaceId == 111311599 then -- Critical Strike
+    local anticheat = game:GetService("ReplicatedFirst")["Serverbased AntiCheat"] -- then why put it in a localscript?
+    -- I literally copied the rest of this from the "Serverbased Anticheat"
+    local sValue = game:GetService("Players").LocalPlayer:WaitForChild("SValue")
+    local function constructAnticheatString()
+    	return "CS-" .. math.random(11111, 99999) .. "-" .. math.random(1111, 9999) .. "-" .. math.random(111111, 999999) .. math.random(1111111, 9999999) .. (sValue.Value * 6) ^ 2 + 18;
+    end
+    -- to be fair the game hasn't been updated in over a year
+    task.spawn(function()
+	    while true do task.wait(2)
+	    	game:GetService("ReplicatedStorage").ACDetect:FireServer(sValue.Value, constructAnticheatString());
+	    end
+    end)
+    anticheat.Disabled = true
+end
+
+local playerNames = {}
+--local npcNames = {} -- I was planning on adding npc support
+local teamNames = {}
+
+-- thanks inori and wally
+local Library = loadstring(game:HttpGet('https://pastebin.com/raw/5jWib1JD'))()
+local SaveManager = loadstring(game:HttpGet('https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/addons/SaveManager.lua'))()
+SaveManager:SetLibrary(Library)
+SaveManager:SetFolder("HitboxExtender")
+Library:Notify("Press 'Home' To Open/Close Gui")
+Library:Notify("Press 'Home' To Open/Close Gui")
+Library:Notify("Press 'Home' To Open/Close Gui")
+Library:Notify("Press 'Home' To Open/Close Gui")
+Library:Notify("Press 'Home' To Open/Close Gui")
+local mainWindow = Library:CreateWindow("Reapah-Haxorz.GG (reapersrevenge_) TESTING_PHASE.")
+
+local mainTab = mainWindow:AddTab("Main")
+local mainGroupbox = mainTab:AddLeftGroupbox("Hitbox Extender")
+local ignoresGroupbox = mainTab:AddRightGroupbox("Ignores")
+local miscGroupbox = mainTab:AddLeftGroupbox("Misc")
+
+local extenderToggled = mainGroupbox:AddToggle("extenderToggled", {Text = "Toggle"})
+local extenderSize = mainGroupbox:AddSlider("extenderSize", {Text = "Size", Min = 2, Max = 250, Default = 10, Rounding = 0})
+local extenderTransparency = mainGroupbox:AddSlider("extenderTransparency", {Text = "Transparency", Min = 0, Max = 1, Default = 0.5, Rounding = 2})
+-- for some reason the save manager doesn't save inputs, idk how to fix it
+local customPartNameInput = mainGroupbox:AddInput("customPartList", {Text = "Custom Part Name", Default = "HeadHB"})
+local extenderPartList = mainGroupbox:AddDropdown("extenderPartList", {Text = "Body Parts", AllowNull = true, Multi = true, Values = {"Custom Part", "Head", "HumanoidRootPart", "Torso", "Left Arm", "Right Arm", "Left Leg", "Right Leg"}, Default = "Head"})
+local extenderUpdateRate = miscGroupbox:AddSlider("extenderUpdateRate", {Text = "Update Rate", Min = 0, Max = 1000, Default = 0, Rounding = 0, Suffix = "ms"})
+
+local extenderSitCheck = ignoresGroupbox:AddToggle("extenderSitCheck", {Text = "Ignore Sitting Players"})
+local ignoreSelectedPlayersToggled = ignoresGroupbox:AddToggle("ignoreSelectedPlayersToggled", {Text = "Ignore Selected Players"})
+local ignorePlayerList = ignoresGroupbox:AddDropdown("ignorePlayerList", {Text = "Players", AllowNull = true, Multi = true, Values = playerNames})
+--local ignoreSelectedNpcsToggled = ignoresGroupbox:AddToggle("ignoreSelectedNpcsToggled", {Text = "Ignore Selected Npcs"})
+--local ignoreNpcList = ignoresGroupbox:AddDropdown("ignoreNpcList", {Text = "Npcs", AllowNull = true, Multi = true, Values = npcNames})
+local ignoreSelfTeamToggled = ignoresGroupbox:AddToggle("ignoreSelfTeamToggled", {Text = "Ignore Own Team"})
+local ignoreSelectedTeamsToggled = ignoresGroupbox:AddToggle("ignoreSelectedTeamsToggled", {Text = "Ignore Selected Teams"})
+local ignoreTeamList = ignoresGroupbox:AddDropdown("ignoreTeamList", {Text = "Teams", AllowNull = true, Multi = true, Values = teamNames})
+
+-- thanks roblox dev forum
+local function CheckTableEquality(t1,t2)
+    for i,v in next, t1 do if t2[i]~=v then return false end end
+    for i,v in next, t2 do if t1[i]~=v then return false end end
+    return true
+end
+
+-- updates the player list
+task.spawn(function()
+    while true do task.wait() -- if you cry about while true do loops then kys
+        local temp = {}
+        for i,v in ipairs(game.Players:GetPlayers()) do
+            if v ~= lPlayer then
+                temp[i] = v.Name
+            end
+        end
+        if not CheckTableEquality(playerNames, temp) then
+            playerNames = temp
+            ignorePlayerList.Values = temp
+            ignorePlayerList:SetValues()
+            ignorePlayerList:Display()
+        end
+    end
+end)
+
+-- updates the team list
+task.spawn(function()
+    while true do task.wait()
+        local temp = {}
+        for i,v in pairs(game.Teams:GetTeams()) do
+            temp[i] = v.Name
+        end
+        if not CheckTableEquality(teamNames, temp) then
+            teamNames = temp
+            ignoreTeamList.Values = temp
+            ignoreTeamList:SetValues()
+            ignoreTeamList:Display()
+        end
+    end
+end)
+
+--task.spawn(function()
+--    while true do task.wait()
+--        local temp = {}
+--        for i,v in ipairs(npcs) do
+--            temp[i] = v.Name
+--        end
+--        if not CheckTableEquality(npcNames, temp) then
+--            ignoreNpcList.Values = temp
+--            ignoreNpcList:SetValues()
+--            ignoreNpcList:Display()
+--        end
+--    end
+--end)
+
+SaveManager:BuildConfigSection(mainTab)
+SaveManager:LoadAutoloadConfig()
+
+-- Returns a table of every possible bodypart in a character, or nil if the character does not exist.
+local function getBodyParts(character)
+    local humanoid = character:WaitForChild("Humanoid")
+    local parts = {
+        Head = character:WaitForChild("Head"),
+        HumanoidRootPart = character:WaitForChild("HumanoidRootPart"),
+        Humanoid = character:WaitForChild("Humanoid")
+    }
+    if humanoid.RigType == Enum.HumanoidRigType.R6 then
+        parts.Torso = {Torso = character:WaitForChild("Torso")}
+        parts["Left Arm"] = {LeftArm = character:WaitForChild("Left Arm")}
+        parts["Right Arm"] = {RightArm = character:WaitForChild("Right Arm")}
+        parts["Left Leg"] = {LeftLeg = character:WaitForChild("Left Leg")}
+        parts["Right Leg"] = {RightLeg = character:WaitForChild("Right Leg")}
+    elseif humanoid.RigType == Enum.HumanoidRigType.R15 then
+        parts.Torso = {
+            UpperTorso = character:WaitForChild("UpperTorso"),
+            LowerTorso = character:WaitForChild("LowerTorso")
+        }
+        parts["Left Arm"] = {
+            LeftHand = character:WaitForChild("LeftHand"),
+            LeftLowerArm = character:WaitForChild("LeftLowerArm"),
+            LeftUpperArm = character:WaitForChild("LeftUpperArm")
+        }
+        parts["Right Arm"] = {
+            RightHand = character:WaitForChild("RightHand"),
+            RightLowerArm = character:WaitForChild("RightLowerArm"),
+            RightUpperArm = character:WaitForChild("RightUpperArm")
+        }
+        parts["Left Leg"] = {
+            LeftFoot = character:WaitForChild("LeftFoot"),
+            LeftLowerLeg = character:WaitForChild("LeftLowerLeg"),
+            LeftUpperLeg = character:WaitForChild("LeftUpperLeg")
+        }
+        parts["Right Leg"] = {
+            RightFoot = character:WaitForChild("RightFoot"),
+            RightLowerLeg = character:WaitForChild("RightLowerLeg"),
+            RightUpperLeg = character:WaitForChild("RightUpperLeg")
+        }
+    end
+    return parts
+end
+
+-- Main function that allows the character passed to be expanded at will
+local function extendCharacter(character)
+    local player = game.Players:GetPlayerFromCharacter(character)
+    local timer = 0
+    local originals = {}
+    local collisions = {}
+    local CharacterAdded = {}
+    local bodyParts = getBodyParts(character)
+    --Sets up original sizes, creates collision constraints, and creates hooks to bypass localscript anticheats
+    local function setup(i, v)
+        if not originals[i] then
+            originals[i] = {}
+            originals[i].Size = v.Size
+            originals[i].Transparency = v.Transparency
+            originals[i].CanCollide = v.CanCollide
+            originals[i].Massless = v.Massless
+            local sizeHook = v:AddGetHook("Size", originals[i].Size)
+            local transparencyHook = v:AddGetHook("Transparency", originals[i].Transparency)
+            local canCollideHook = v:AddGetHook("CanCollide", originals[i].CanCollide)
+            local masslessHook = v:AddGetHook("Massless", originals[i].Massless)
+            v:AddSetHook("Size", function(self, value)
+                originals[i].Size = value
+                sizeHook:Modify("Size", value)
+                return value
+            end)
+            v:AddSetHook("Transparency", function(self, value)
+                originals[i].Transparency = value
+                transparencyHook:Modify("Transparency", value)
+                return value
+            end)
+            v:AddSetHook("CanCollide", function(self, value)
+                originals[i].CanCollide = value
+                canCollideHook:Modify("CanCollide", value)
+                return value
+            end)
+            v:AddSetHook("Massless", function(self, value)
+                originals[i].Massless = value
+                masslessHook:Modify("Massless", value)
+                return value
+            end)
+        end
+        if not collisions[i] then
+            collisions[i] = {}
+            -- thanks to GameGuy#5286 for telling me collision constraints exist
+            for o,b in pairs(getBodyParts(lPlayer.Character)) do
+                if o ~= "Humanoid" and type(b) ~= "table" then
+                    collisions[i][o] = Instance.new("NoCollisionConstraint", v)
+                    collisions[i][o].Enabled = false
+                    collisions[i][o].Part0 = v
+                    collisions[i][o].Part1 = b
+                    CharacterAdded[i] = lPlayer.CharacterAdded:Connect(function(char)
+                        local temp = char:WaitForChild(o)
+                        collisions[i][o].Part1 = temp
+                    end)
+                elseif type(b) == "table" then
+                    for g,z in pairs(b) do
+                        if z:IsA("BasePart") then
+                            collisions[i][g] = Instance.new("NoCollisionConstraint", v)
+                            collisions[i][g].Enabled = false
+                            collisions[i][g].Part0 = v
+                            collisions[i][g].Part1 = z
+                            CharacterAdded[i] = lPlayer.CharacterAdded:Connect(function(char)
+                                local temp = char:WaitForChild(g)
+                                if temp:IsA("BasePart") then
+                                    collisions[i][g].Part1 = temp
+                                end
+                            end)
+                        end
+                    end
+                end
+            end
+        end
+    end
+    do
+        local customPart = character:FindFirstChild(customPartNameInput.Value)
+        if customPart and customPart:IsA("BasePart") then
+            if not originals[customPart.Name] then
+                setup(customPart.Name, customPart)
+            end
+        end
+        for i,v in pairs(bodyParts) do
+            if i ~= "Humanoid" and type(v) ~= "table" then
+                if not originals[i] then
+                    setup(i,v)
+                end
+            elseif type(v) == "table" then
+                for o,b in pairs(v) do
+                    if not originals[o] then
+                        setup(o,b)
+                    end
+                end
+            end
+        end
+    end
+    -- resets the properties of the selected part.
+    -- if "all" is passed, will reset every part
+    local function reset(part)
+        if part == "custompart" or part == "all" then
+            local customPart = character:FindFirstChild(customPartNameInput.Value)
+            if customPart and customPart:IsA("BasePart") then
+                customPart.Size = originals[customPart.Name].Size
+                customPart.Transparency = originals[customPart.Name].Transparency
+                customPart.CanCollide = originals[customPart.Name].CanCollide
+                customPart.Massless = originals[customPart.Name].Massless
+            end
+        end
+        for i,v in pairs(bodyParts) do
+            if string.lower(part) == string.lower(i) or part == "all" then
+                if i ~= "Humanoid" and type(v) ~= "table" then
+                    v.Size = originals[i].Size
+                    v.Transparency = originals[i].Transparency
+                    v.CanCollide = originals[i].CanCollide
+                    v.Massless = originals[i].Massless
+                elseif type(v) == "table" then
+                    for o,b in pairs(v) do
+                        b.Size = originals[o].Size
+                        b.Transparency = originals[o].Transparency
+                        b.Massless = originals[o].Massless
+                        for _,z in pairs(collisions[o]) do
+                            if z.Enabled == true and z.Part0 == b then
+                                z.Enabled = false
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    local function getChecks()
+        if bodyParts.Humanoid:GetState() == Enum.HumanoidStateType.Dead then
+            return 2
+        end
+        if extenderSitCheck.Value then
+            if bodyParts.Humanoid.Sit then
+                return 1
+            end
+        end
+        if ignoreSelfTeamToggled.Value then
+            if game.PlaceId == 2039118386 then -- Neighborhood War
+                local selfTeam
+                local playerTeam
+                pcall(function()
+                    selfTeam = lPlayer.Character.HumanoidRootPart.BrickColor
+                    playerTeam = bodyParts.HumanoidRootPart.BrickColor
+                end)
+                if selfTeam == playerTeam then
+                    return 1
+                end
+            else
+                if lPlayer.Team == player.Team then
+                    return 1
+                end
+            end
+        end
+        if ignoreSelectedTeamsToggled.Value then
+            local teamList = ignoreTeamList:GetActiveValues()
+            if table.find(teamList, tostring(player.Team)) then
+                return 1
+            end
+        end
+        if ignoreSelectedPlayersToggled.Value then
+            local playerList = ignorePlayerList:GetActiveValues()
+            if table.find(playerList, tostring(player.Name)) then
+                return 1
+            end
+        end
+        return 0
+    end
+    -- here's the actual expander code
+    local Heartbeat
+    Heartbeat = game:GetService("RunService").Heartbeat:Connect(function(deltaTime)
+        timer += deltaTime
+        if timer >= (extenderUpdateRate.Value / 100) then -- divided by 100 because milliseconds
+            timer = 0
+            local bodyPartList = extenderPartList:GetActiveValues()
+            local checks = getChecks()
+            if checks == 2 then
+                reset("all")
+                for _,v in pairs(CharacterAdded) do
+                    v:Disconnect()
+                end
+                Heartbeat:Disconnect()
+                return
+            elseif checks == 1 then
+                reset("all")
+                return
+            end
+            if extenderToggled.Value then
+                if table.find(bodyPartList, "Custom Part") then
+                    local customPart = character:FindFirstChild(customPartNameInput.Value)
+                    if customPart then
+                        customPart.Size = Vector3.new(extenderSize.Value, extenderSize.Value, extenderSize.Value)
+                        customPart.Transparency = extenderTransparency.Value
+                        customPart.CanCollide = false
+                        customPart.Massless = true
+                    end
+                else
+                    reset("custompart")
+                end
+                for i,v in pairs(bodyParts) do
+                    if table.find(bodyPartList, i) then
+                        if type(v) ~= "table" then
+                            if i ~= "HumanoidRootPart" then
+                                v.Massless = true
+                            end
+                            v.Size = Vector3.new(extenderSize.Value, extenderSize.Value, extenderSize.Value)
+                            v.Transparency = extenderTransparency.Value
+                            v.CanCollide = false
+                        else
+                            for o,b in pairs(v) do
+                                b.Massless = true
+                                b.Size = Vector3.new(extenderSize.Value, extenderSize.Value, extenderSize.Value)
+                                b.Transparency = extenderTransparency.Value
+                                for _,z in pairs(collisions[o]) do
+                                    if z.Enabled == false and z.Part0 == b then
+                                        z.Enabled = true
+                                    end
+                                end
+                            end
+                        end
+                    else
+                        reset(i)
+                    end
+                end
+            else
+                reset("all")
+            end
+        end
+    end)
+    local PlayerRemoving
+    PlayerRemoving = game.Players.PlayerRemoving:Connect(function(v)
+        if v == player then
+            Heartbeat:Disconnect()
+            PlayerRemoving:Disconnect()
+        end
+    end)
+end
+for _,player in ipairs(game.Players:GetPlayers()) do
+    if player ~= lPlayer then
+        task.spawn(function()
+            if player.Character then
+                -- why use coroutine.wrap after I've been abusing task.spawn? fuck you that's why
+                coroutine.wrap(extendCharacter)(player.Character)
+            end
+            player.CharacterAdded:Connect(function(v)
+                coroutine.wrap(extendCharacter)(v)
+            end)
+        end)
+    end
+end
+game.Players.PlayerAdded:Connect(function(player)
+        player.CharacterAdded:Connect(function(v)
+        coroutine.wrap(extendCharacter)(v)
+    end)
+end)
+-- now, where are my schizo meds?
+
+miscGroupbox:AddLabel('Player')
+
+miscGroupbox:AddToggle('Infjump', {
+    Text = 'Infinite Jump',
+    Default = false,
+    Tooltip = 'Jump As High As You Want!',
+    Callback = function(Value)
+        _G.infinjump = (Value)
+
+            -- Get the local player and their mouse
+            local player = game:GetService("Players").LocalPlayer
+            local mouse = player:GetMouse()
+            
+            -- Listen for the spacebar key press to jump repeatedly
+            mouse.KeyDown:connect(function(key)
+                if _G.infinjump and key:byte() == 32 then
+                    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        humanoid:ChangeState("Jumping")
+                        wait(0.1)
+                        humanoid:ChangeState("Seated")
+                    end
+                end
+            end)
+    end
+})
+
+    repeat wait() 
+        until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:findFirstChild("HumanoidRootPart") and game.Players.LocalPlayer.Character:findFirstChild("Humanoid") 
+        local mouse = game.Players.LocalPlayer:GetMouse() 
+        repeat wait() until mouse
+        local player = game.Players.LocalPlayer
+        local mouse = player:GetMouse()
+        
+        local plr = player
+        local torso = nil
+        local flying = false
+        local deb = true
+        local ctrl = {f = 0, b = 0, l = 0, r = 0}
+        local lastctrl = {f = 0, b = 0, l = 0, r = 0}
+        local maxspeed = 50
+        local speed = 0
+        local flySpeed = 1 -- Default fly speed
+        
+        function Fly()
+            local character = plr.Character
+            if character then
+                torso = character:WaitForChild("HumanoidRootPart")
+                local bg = Instance.new("BodyGyro", torso)
+                bg.P = 9e4
+                bg.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+                bg.cframe = torso.CFrame
+                local bv = Instance.new("BodyVelocity", torso)
+                bv.velocity = Vector3.new(0, 0.1, 0)
+                bv.maxForce = Vector3.new(9e9, 9e9, 9e9)
+                repeat
+                    wait()
+                    plr.Character.Humanoid.PlatformStand = true
+                    if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then
+                        speed = speed + (0.5 + (speed / maxspeed)) * flySpeed
+                        if speed > maxspeed * flySpeed then
+                            speed = maxspeed * flySpeed
+                        end
+                    elseif not (ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0) and speed ~= 0 then
+                        speed = speed - 1
+                        if speed < 0 then
+                            speed = 0
+                        end
+                    end
+                    if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then
+                        bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (ctrl.f + ctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(ctrl.l + ctrl.r, (ctrl.f + ctrl.b) * 0.2, 0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p)) * speed
+                        lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r}
+                    elseif (ctrl.l + ctrl.r) == 0 and (ctrl.f + ctrl.b) == 0 and speed ~= 0 then
+                        bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (lastctrl.f + lastctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(lastctrl.l + lastctrl.r, (lastctrl.f + lastctrl.b) * 0.2, 0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p)) * speed
+                    else
+                        bv.velocity = Vector3.new(0, 0.1, 0)
+                    end
+                    bg.cframe = game.Workspace.CurrentCamera.CoordinateFrame * CFrame.Angles(-math.rad((ctrl.f + ctrl.b) * 50 * speed / (maxspeed * flySpeed)), 0, 0)
+                until not flying
+                ctrl = {f = 0, b = 0, l = 0, r = 0}
+                lastctrl = {f = 0, b = 0, l = 0, r = 0}
+                speed = 0
+                bg:Destroy()
+                bv:Destroy()
+                plr.Character.Humanoid.PlatformStand = false
+            end
+        end
+        
+        local function StartFlying()
+            if flying then
+                return
+            end
+            flying = true
+            Fly()
+        end
+        
+        local function StopFlying()
+            if not flying then
+                return
+            end
+            flying = false
+        end
+        
+        mouse.KeyDown:Connect(function(key)
+            if key:lower() == "=" then
+                StartFlying()
+            elseif key:lower() == "w" then
+                ctrl.f = 1
+            elseif key:lower() == "s" then
+                ctrl.b = -1
+            elseif key:lower() == "a" then
+                ctrl.l = -1
+            elseif key:lower() == "d" then
+                ctrl.r = 1
+            end
+        end)
+        
+        mouse.KeyUp:Connect(function(key)
+            if key:lower() == "=" then
+                StopFlying()
+            elseif key:lower() == "w" then
+                ctrl.f = 0
+            elseif key:lower() == "s" then
+                ctrl.b = 0
+            elseif key:lower() == "a" then
+                ctrl.l = 0
+            elseif key:lower() == "d" then
+                ctrl.r = 0
+            end
+        end)
+        
+        local function Unfly()
+            StopFlying()
+        end
+        
+        local function HandleFlyCommand(Arguments, Speaker)
+            if Arguments[1] then
+                local newFlySpeed = tonumber(Arguments[1])
+                if newFlySpeed and newFlySpeed > 0 then
+                    flySpeed = newFlySpeed
+                    Speaker:SendSystemMessage("Fly speed set to " .. flySpeed, Color3.fromRGB(255, 255, 0))
+                else
+                    Speaker:SendSystemMessage("Invalid fly speed value.", Color3.fromRGB(255, 0, 0))
+                end
+            else
+                StartFlying()
+            end
+        end
+        
+        local function HandleUnflyCommand(Arguments, Speaker)
+            Unfly()
+        end
+
+miscGroupbox:AddToggle('Flight', {
+    Text = 'Flight',
+    Default = false,
+    Tooltip = 'Might Be Detected.',
+    Callback = function(Value)
+         if Value then
+        HandleFlyCommand({}, game.Players.LocalPlayer) -- Start flying when the switch is turned on
+    else
+        HandleUnflyCommand({}, game.Players.LocalPlayer) -- Stop flying when the switch is turned off
+    end
+    end
+})
+
+miscGroupbox:AddSlider('Ws', {
+    Text = 'WalkSpeed',
+    Default = 16,
+    Min = 16,
+    Max = 500,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+         game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+    end
+})
+
+miscGroupbox:AddSlider('Jp', {
+    Text = 'JumpPower',
+    Default = 50,
+    Min = 50,
+    Max = 500,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+       game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+    end
+})
+
+   --// Load Aimbot Module
+--[[
+    FOVSettings.Amount = New
+    	FOVSettings.Enabled = New
+        Settings.AliveCheck = New
+        	Settings.WallCheck = New
+            Settings.TeamCheck = New
+            	Settings.Enabled = New
+]]
+
+--// Cache
+
+local loadstring, game, getgenv, setclipboard = loadstring, game, getgenv, setclipboard
+
+--// Loaded check
+
+if getgenv().Aimbot then return end
+
+--// Load Aimbot V2 (Raw)
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/CriminalMM/rep/main/aiming"))()
+
+--// Variables
+
+local Aimbot = getgenv().Aimbot
+local Settings, FOVSettings, Functions = Aimbot.Settings, Aimbot.FOVSettings, Aimbot.Functions
+
+local advanTab = mainWindow:AddTab("Advantage+")
+local aimGroupbox = advanTab:AddLeftGroupbox("Aimbot")
+local espGroupbox = advanTab:AddRightGroupbox("ESP")
+local miscvisGroupbox = advanTab:AddRightGroupbox("Misc Visuals")
+
+aimGroupbox:AddToggle('Enableaimbote', {
+    Text = 'Enable Aimbot',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+     	Settings.Enabled = Value
+    end
+})
+ 
+
+aimGroupbox:AddSlider('Smoothingshit', {
+    Text = 'Smoothing',
+    Default = 1,
+    Min = 1,
+    Max = 5,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        Settings.Sensitivity = Value
+    end
+})
+
+aimGroupbox:AddToggle('Enableteamcheck', {
+    Text = 'Team Check',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+        Settings.TeamCheck = Value
+    end
+})
+
+aimGroupbox:AddToggle('Enablewallcheck', {
+    Text = 'Wall Check',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+    	Settings.WallCheck = Value
+    end
+})
+
+aimGroupbox:AddToggle('Enablealivecheck', {
+    Text = 'Alive Check',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+        Settings.AliveCheck = Value
+    end
+})
+
+
+
+aimGroupbox:AddToggle('Enablefov', {
+    Text = 'Enable FoV Circle',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+        FOVSettings.Enabled = Value
+        end
+})
+
+aimGroupbox:AddToggle('Enabledfillfov', {
+    Text = 'Enable Filled FoV Circle',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+        FOVSettings.Filled = Value
+    end
+})
+
+aimGroupbox:AddSlider('Fovsize', {
+    Text = 'Field of View Size',
+    Default = 80,
+    Min = 80,
+    Max = 500,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        FOVSettings.Amount = Value
+    end
+})
+
+aimGroupbox:AddSlider('Fovsides', {
+    Text = 'Field of View Sides',
+    Default = 60,
+    Min = 3,
+    Max = 60,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        FOVSettings.Sides = Value
+    end
+})
+
+aimGroupbox:AddSlider('Fovthickness', {
+    Text = 'Field of View Thickness',
+    Default = 1,
+    Min = 1,
+    Max = 50,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        FOVSettings.Thickness = Value
+    end
+})
+
+
+--// Loading ESP Modules
+local espLib = {
+    drawings = {},
+    instances = {},
+    espCache = {},
+    chamsCache = {},
+    objectCache = {},
+    conns = {},
+    whitelist = {}, -- insert string that is the player's name you want to whitelist (turns esp color to whitelistColor in options)
+    blacklist = {}, -- insert string that is the player's name you want to blacklist (removes player from esp)
+    options = {
+        enabled = true,
+        minScaleFactorX = 1,
+        maxScaleFactorX = 10,
+        minScaleFactorY = 1,
+        maxScaleFactorY = 10,
+        boundingBox = false, -- WARNING | Significant Performance Decrease when true
+        boundingBoxDescending = false,
+        font = 2,
+        fontSize = 13,
+        limitDistance = false,
+        maxDistance = 1000,
+        visibleOnly = false,
+        teamCheck = false,
+        teamColor = false,
+        fillColor = nil,
+        whitelistColor = Color3.new(1, 0, 0),
+        outOfViewArrows = false,
+        outOfViewArrowsFilled = false,
+        outOfViewArrowsSize = 25,
+        outOfViewArrowsRadius = 100,
+        outOfViewArrowsColor = Color3.new(1, 1, 1),
+        outOfViewArrowsTransparency = 0.5,
+        outOfViewArrowsOutline = false,
+        outOfViewArrowsOutlineFilled = false,
+        outOfViewArrowsOutlineColor = Color3.new(1, 1, 1),
+        outOfViewArrowsOutlineTransparency = 1,
+        names = false,
+        nameTransparency = 1,
+        nameColor = Color3.new(1, 1, 1),
+        boxes = false,
+        boxesTransparency = 1,
+        boxesColor = Color3.new(1, 0, 0),
+        boxFill = false,
+        boxFillTransparency = 0.5,
+        boxFillColor = Color3.new(1, 0, 0),
+        healthBars = false,
+        healthBarsSize = 1,
+        healthBarsTransparency = 1,
+        healthBarsColor = Color3.new(0, 1, 0),
+        healthText = false,
+        healthTextTransparency = 1,
+        healthTextSuffix = "%",
+        healthTextColor = Color3.new(1, 1, 1),
+        distance = false,
+        distanceTransparency = 1,
+        distanceSuffix = " Studs",
+        distanceColor = Color3.new(1, 1, 1),
+        tracers = false,
+        tracerTransparency = 1,
+        tracerColor = Color3.new(1, 1, 1),
+        tracerOrigin = "Bottom", -- Available [Mouse, Top, Bottom]
+        chams = false,
+        chamsFillColor = Color3.new(1, 0, 0),
+        chamsFillTransparency = 0.5,
+        chamsOutlineColor = Color3.new(),
+        chamsOutlineTransparency = 0
+    },
+ };
+ local espLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Sirius/request/library/esp/esp.lua'),true))()
+ -------------------------Bypass by iris
+ getgenv().BypassSettings = {
+   ["Crystal AntiCheat"] = false,
+   ["Adonis"] = false,
+ 
+   ["Anti-Obfuscated Scripts"] = false,-- CANNOT BE ENABLED WITH CRYSTAL This will block any obfuscated script on the client from running (Not executed by your exploit thought)
+   ["Random"] = false, -- Will disallow scripts calling, GetPropertyChanged signal on WalkSpeed, JumpPower, Gravity, Health, LogService
+ 
+   ["Enable Kill Logs"] = false, -- Say if you want to get told what's bypassed
+ }
+ 
+ loadstring(game:HttpGet("https://irisapp.ca/TheGoodSucc/iAntiCheat.lua"))()
+ 
+ espGroupbox:AddToggle('Espen', {
+    Text = 'Enabled ESP',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+    Callback = function(Value)
+        local espfunc = Value
+        if espfunc then
+        espLib:Load()
+        end
+        if not espfunc then
+        espLib:Unload()
+        end
+    end
+})
+
+espGroupbox:AddToggle('Tracerline', {
+    Text = 'Tracer ESP',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.tracers = Value
+    end
+})
+
+espGroupbox:AddToggle('Boxesp', {
+    Text = 'Boxes ESP',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.boxes = Value
+    end
+})
+
+espGroupbox:AddToggle('boxfill', {
+    Text = 'Box Fill',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.boxFill = Value
+    end
+})
+
+espGroupbox:AddToggle('Healthbaresp', {
+    Text = 'Healthbar ESP',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.healthBars = Value
+    end
+})
+
+espGroupbox:AddToggle('Healthtext', {
+    Text = 'Health Text ESP',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.healthText = Value
+    end
+})
+
+espGroupbox:AddToggle('Nameesp', {
+    Text = 'Name ESP',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.names = Value
+    end
+})
+
+espGroupbox:AddLabel('ESP Settings')
+
+espGroupbox:AddToggle('Teamcheck', {
+    Text = 'Teamcheck',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.teamCheck = Value
+    end
+})
+
+espGroupbox:AddToggle('Limitdistance', {
+    Text = 'Limited Distance',
+    Default = false, -- Default value (true / false)
+    Tooltip = 'Sets A Range For When The ESP Can Draw', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.limitDistance = Value
+    end
+})
+
+espGroupbox:AddSlider('Maxdistance', {
+    Text = 'Max Distance',
+    Default = 250,
+    Min = 100,
+    Max = 2500,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        espLib.options.maxDistance = Value
+    end
+})
+
+
+espGroupbox:AddToggle('Visibleonly', {
+    Text = 'Visible Only',
+    Default = false, -- Default value (true / false)
+    Tooltip = 'ESP Only Draws When Player Is Seen', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.visibleOnly = Value
+    end
+})
+
+
+ espLib.options.outOfViewArrows = false
+    espLib.options.outOfViewArrowsOutline = false
+    espLib.options.outOfViewArrowsFilled = false
+    espLib.options.outOfViewArrowsOutlineFilled = false
+    espLib.options.teamCheck = false
+    espLib.options.boxes = false
+    espLib.options.boxFill = false
+    espLib.options.healthBars = false
+    espLib.options.healthText = false
+    espLib.options.tracers = false
+    espLib.options.limitDistance = false
+    espLib.options.visibleOnly = false
+    espLib.options.chams = false
+
+ local Lighting = game:GetService("Lighting")
+
+local fullbrightEnabled = false -- Track whether Fullbright is enabled
+local fullbrightStrength = 0 -- Track the Fullbright strength
+
+-- Function to update the Fullbright settings based on the enabled state and strength
+local function updateFullbright()
+    if fullbrightEnabled then
+        Lighting.Ambient = Color3.fromRGB(255, 255, 255)
+        Lighting.Brightness = 2 + fullbrightStrength -- Adjust Brightness based on strength
+    else
+        Lighting.Ambient = Color3.fromRGB(127, 127, 127)
+        Lighting.Brightness = 2
+    end
+end
+
+-- Toggle for enabling/disabling Fullbright
+miscvisGroupbox:AddToggle('Fullbright', {
+    Text = 'Enable Fullbright',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+        fullbrightEnabled = Value
+        updateFullbright() -- Update Fullbright settings when the toggle is changed
+    end
+})
+
+-- Slider for Fullbright strength
+miscvisGroupbox:AddSlider('Fullbrightstrenght', {
+    Text = 'Fullbright Strength',
+    Default = 0,
+    Min = 0,
+    Max = 10,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        fullbrightStrength = Value
+        updateFullbright() -- Update Fullbright settings when the slider is changed
+    end
+})
+
+
+ miscvisGroupbox:AddToggle('Hlowned', {
+    Text = 'Highlight Owned Parts',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+            local RunService, FindFirstChildOfClass = game.GetService(game, "RunService"), game.FindFirstChildOfClass;
+                local Client = game.GetService(game, "Players").LocalPlayer
+                
+                local function highlightParts()
+                    for _, v in pairs(game.workspace:GetDescendants()) do
+                        if  v:IsA("Part") and v.Parent ~= Client.Character and v.Anchored == false then 
+                            local glow = Instance.new("Highlight")
+                            glow.Parent = v
+                            RunService.Heartbeat:Connect(function()
+                                if v.ReceiveAge ~= 0 then 
+                                    glow.Enabled = false
+                                else
+                                    glow.Enabled = true
+                                end
+                            end)
+                        end
+                    end
+                end
+                
+                local function removeHighlights()
+                    for _, v in pairs(game.workspace:GetDescendants()) do
+                        if v:IsA("Highlight") then
+                            v:Destroy()
+                        end
+                    end
+                end
+                
+                if Value then
+                    highlightParts()
+                else
+                    removeHighlights()
+                end
+    end
+})
+
+
+   --// Load Aimbot Module
+--[[
+    FOVSettings.Amount = New
+    	FOVSettings.Enabled = New
+        Settings.AliveCheck = New
+        	Settings.WallCheck = New
+            Settings.TeamCheck = New
+            	Settings.Enabled = New
+]]
+
+--// Cache
+
+local loadstring, game, getgenv, setclipboard = loadstring, game, getgenv, setclipboard
+
+--// Loaded check
+
+if getgenv().Aimbot then return end
+
+--// Load Aimbot V2 (Raw)
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/CriminalMM/rep/main/aiming"))()
+
+--// Variables
+
+local Aimbot = getgenv().Aimbot
+local Settings, FOVSettings, Functions = Aimbot.Settings, Aimbot.FOVSettings, Aimbot.Functions
+
+local advanTab = mainWindow:AddTab("Advantage+")
+local aimGroupbox = advanTab:AddLeftGroupbox("Aimbot")
+local espGroupbox = advanTab:AddRightGroupbox("ESP")
+local miscvisGroupbox = advanTab:AddRightGroupbox("Misc Visuals")
+
+aimGroupbox:AddToggle('Enableaimbote', {
+    Text = 'Enable Aimbot',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+     	Settings.Enabled = Value
+    end
+})
+ 
+
+aimGroupbox:AddSlider('Smoothingshit', {
+    Text = 'Smoothing',
+    Default = 1,
+    Min = 1,
+    Max = 5,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        Settings.Sensitivity = Value
+    end
+})
+
+aimGroupbox:AddToggle('Enableteamcheck', {
+    Text = 'Team Check',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+        Settings.TeamCheck = Value
+    end
+})
+
+aimGroupbox:AddToggle('Enablewallcheck', {
+    Text = 'Wall Check',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+    	Settings.WallCheck = Value
+    end
+})
+
+aimGroupbox:AddToggle('Enablealivecheck', {
+    Text = 'Alive Check',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+        Settings.AliveCheck = Value
+    end
+})
+
+
+
+aimGroupbox:AddToggle('Enablefov', {
+    Text = 'Enable FoV Circle',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+        FOVSettings.Enabled = Value
+        end
+})
+
+aimGroupbox:AddToggle('Enabledfillfov', {
+    Text = 'Enable Filled FoV Circle',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+        FOVSettings.Filled = Value
+    end
+})
+
+aimGroupbox:AddSlider('Fovsize', {
+    Text = 'Field of View Size',
+    Default = 80,
+    Min = 80,
+    Max = 500,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        FOVSettings.Amount = Value
+    end
+})
+
+aimGroupbox:AddSlider('Fovsides', {
+    Text = 'Field of View Sides',
+    Default = 60,
+    Min = 3,
+    Max = 60,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        FOVSettings.Sides = Value
+    end
+})
+
+aimGroupbox:AddSlider('Fovthickness', {
+    Text = 'Field of View Thickness',
+    Default = 1,
+    Min = 1,
+    Max = 50,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        FOVSettings.Thickness = Value
+    end
+})
+
+
+--// Loading ESP Modules
+local espLib = {
+    drawings = {},
+    instances = {},
+    espCache = {},
+    chamsCache = {},
+    objectCache = {},
+    conns = {},
+    whitelist = {}, -- insert string that is the player's name you want to whitelist (turns esp color to whitelistColor in options)
+    blacklist = {}, -- insert string that is the player's name you want to blacklist (removes player from esp)
+    options = {
+        enabled = true,
+        minScaleFactorX = 1,
+        maxScaleFactorX = 10,
+        minScaleFactorY = 1,
+        maxScaleFactorY = 10,
+        boundingBox = false, -- WARNING | Significant Performance Decrease when true
+        boundingBoxDescending = false,
+        font = 2,
+        fontSize = 13,
+        limitDistance = false,
+        maxDistance = 1000,
+        visibleOnly = false,
+        teamCheck = false,
+        teamColor = false,
+        fillColor = nil,
+        whitelistColor = Color3.new(1, 0, 0),
+        outOfViewArrows = false,
+        outOfViewArrowsFilled = false,
+        outOfViewArrowsSize = 25,
+        outOfViewArrowsRadius = 100,
+        outOfViewArrowsColor = Color3.new(1, 1, 1),
+        outOfViewArrowsTransparency = 0.5,
+        outOfViewArrowsOutline = false,
+        outOfViewArrowsOutlineFilled = false,
+        outOfViewArrowsOutlineColor = Color3.new(1, 1, 1),
+        outOfViewArrowsOutlineTransparency = 1,
+        names = false,
+        nameTransparency = 1,
+        nameColor = Color3.new(1, 1, 1),
+        boxes = false,
+        boxesTransparency = 1,
+        boxesColor = Color3.new(1, 0, 0),
+        boxFill = false,
+        boxFillTransparency = 0.5,
+        boxFillColor = Color3.new(1, 0, 0),
+        healthBars = false,
+        healthBarsSize = 1,
+        healthBarsTransparency = 1,
+        healthBarsColor = Color3.new(0, 1, 0),
+        healthText = false,
+        healthTextTransparency = 1,
+        healthTextSuffix = "%",
+        healthTextColor = Color3.new(1, 1, 1),
+        distance = false,
+        distanceTransparency = 1,
+        distanceSuffix = " Studs",
+        distanceColor = Color3.new(1, 1, 1),
+        tracers = false,
+        tracerTransparency = 1,
+        tracerColor = Color3.new(1, 1, 1),
+        tracerOrigin = "Bottom", -- Available [Mouse, Top, Bottom]
+        chams = false,
+        chamsFillColor = Color3.new(1, 0, 0),
+        chamsFillTransparency = 0.5,
+        chamsOutlineColor = Color3.new(),
+        chamsOutlineTransparency = 0
+    },
+ };
+ local espLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Sirius/request/library/esp/esp.lua'),true))()
+ -------------------------Bypass by iris
+ getgenv().BypassSettings = {
+   ["Crystal AntiCheat"] = false,
+   ["Adonis"] = false,
+ 
+   ["Anti-Obfuscated Scripts"] = false,-- CANNOT BE ENABLED WITH CRYSTAL This will block any obfuscated script on the client from running (Not executed by your exploit thought)
+   ["Random"] = false, -- Will disallow scripts calling, GetPropertyChanged signal on WalkSpeed, JumpPower, Gravity, Health, LogService
+ 
+   ["Enable Kill Logs"] = false, -- Say if you want to get told what's bypassed
+ }
+ 
+ loadstring(game:HttpGet("https://irisapp.ca/TheGoodSucc/iAntiCheat.lua"))()
+ 
+ espGroupbox:AddToggle('Espen', {
+    Text = 'Enabled ESP',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+    Callback = function(Value)
+        local espfunc = Value
+        if espfunc then
+        espLib:Load()
+        end
+        if not espfunc then
+        espLib:Unload()
+        end
+    end
+})
+
+espGroupbox:AddToggle('Tracerline', {
+    Text = 'Tracer ESP',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.tracers = Value
+    end
+})
+
+espGroupbox:AddToggle('Boxesp', {
+    Text = 'Boxes ESP',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.boxes = Value
+    end
+})
+
+espGroupbox:AddToggle('boxfill', {
+    Text = 'Box Fill',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.boxFill = Value
+    end
+})
+
+espGroupbox:AddToggle('Healthbaresp', {
+    Text = 'Healthbar ESP',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.healthBars = Value
+    end
+})
+
+espGroupbox:AddToggle('Healthtext', {
+    Text = 'Health Text ESP',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.healthText = Value
+    end
+})
+
+espGroupbox:AddToggle('Nameesp', {
+    Text = 'Name ESP',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.names = Value
+    end
+})
+
+espGroupbox:AddLabel('ESP Settings')
+
+espGroupbox:AddToggle('Teamcheck', {
+    Text = 'Teamcheck',
+    Default = false, -- Default value (true / false)
+    Tooltip = '', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.teamCheck = Value
+    end
+})
+
+espGroupbox:AddToggle('Limitdistance', {
+    Text = 'Limited Distance',
+    Default = false, -- Default value (true / false)
+    Tooltip = 'Sets A Range For When The ESP Can Draw', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.limitDistance = Value
+    end
+})
+
+espGroupbox:AddSlider('Maxdistance', {
+    Text = 'Max Distance',
+    Default = 250,
+    Min = 100,
+    Max = 2500,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        espLib.options.maxDistance = Value
+    end
+})
+
+
+espGroupbox:AddToggle('Visibleonly', {
+    Text = 'Visible Only',
+    Default = false, -- Default value (true / false)
+    Tooltip = 'ESP Only Draws When Player Is Seen', -- Information shown when you hover over the toggle
+   Callback = function(Value)
+    espLib.options.visibleOnly = Value
+    end
+})
+
+
+ espLib.options.outOfViewArrows = false
+    espLib.options.outOfViewArrowsOutline = false
+    espLib.options.outOfViewArrowsFilled = false
+    espLib.options.outOfViewArrowsOutlineFilled = false
+    espLib.options.teamCheck = false
+    espLib.options.boxes = false
+    espLib.options.boxFill = false
+    espLib.options.healthBars = false
+    espLib.options.healthText = false
+    espLib.options.tracers = false
+    espLib.options.limitDistance = false
+    espLib.options.visibleOnly = false
+    espLib.options.chams = false
+
+ local Lighting = game:GetService("Lighting")
+
+local fullbrightEnabled = false -- Track whether Fullbright is enabled
+local fullbrightStrength = 0 -- Track the Fullbright strength
+
+-- Function to update the Fullbright settings based on the enabled state and strength
+local function updateFullbright()
+    if fullbrightEnabled then
+        Lighting.Ambient = Color3.fromRGB(255, 255, 255)
+        Lighting.Brightness = 2 + fullbrightStrength -- Adjust Brightness based on strength
+    else
+        Lighting.Ambient = Color3.fromRGB(127, 127, 127)
+        Lighting.Brightness = 2
+    end
+end
+
+-- Toggle for enabling/disabling Fullbright
+miscvisGroupbox:AddToggle('Fullbright', {
+    Text = 'Enable Fullbright',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+        fullbrightEnabled = Value
+        updateFullbright() -- Update Fullbright settings when the toggle is changed
+    end
+})
+
+-- Slider for Fullbright strength
+miscvisGroupbox:AddSlider('Fullbrightstrenght', {
+    Text = 'Fullbright Strength',
+    Default = 0,
+    Min = 0,
+    Max = 10,
+    Rounding = 1,
+    Compact = false,
+
+    Callback = function(Value)
+        fullbrightStrength = Value
+        updateFullbright() -- Update Fullbright settings when the slider is changed
+    end
+})
+
+
+ miscvisGroupbox:AddToggle('Hlowned', {
+    Text = 'Highlight Owned Parts',
+    Default = false,
+    Tooltip = 'The Stuff',
+
+    Callback = function(Value)
+            local RunService, FindFirstChildOfClass = game.GetService(game, "RunService"), game.FindFirstChildOfClass;
+                local Client = game.GetService(game, "Players").LocalPlayer
+                
+                local function highlightParts()
+                    for _, v in pairs(game.workspace:GetDescendants()) do
+                        if  v:IsA("Part") and v.Parent ~= Client.Character and v.Anchored == false then 
+                            local glow = Instance.new("Highlight")
+                            glow.Parent = v
+                            RunService.Heartbeat:Connect(function()
+                                if v.ReceiveAge ~= 0 then 
+                                    glow.Enabled = false
+                                else
+                                    glow.Enabled = true
+                                end
+                            end)
+                        end
+                    end
+                end
+                
+                local function removeHighlights()
+                    for _, v in pairs(game.workspace:GetDescendants()) do
+                        if v:IsA("Highlight") then
+                            v:Destroy()
+                        end
+                    end
+                end
+                
+                if Value then
+                    highlightParts()
+                else
+                    removeHighlights()
+                end
+    end
+})
